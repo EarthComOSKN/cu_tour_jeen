@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 class User extends ChangeNotifier {
-  String isHost;
+  bool isHost = false;
 
   String _nickName;
 

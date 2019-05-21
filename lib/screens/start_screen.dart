@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:monopoly_money/providers/players.dart';
 import 'package:monopoly_money/providers/user.dart';
 import 'package:monopoly_money/providers/world.dart';
 import 'package:nearby_connections/nearby_connections.dart';
@@ -92,14 +93,36 @@ class _StartScreenState extends State<StartScreen> {
     setState(() {
       isLoading = true;
     });
-
+    BuildContext context = World.context;
     try {
       await Nearby().startAdvertising(
           Provider.of<User>(context).nickName, Strategy.P2P_STAR,
-          onConnectionInitiated: (endpointId, connectionInfo) {},
-          onConnectionResult: (endpointId, status) {},
-          onDisconnected: (endpointId) {});
+          onConnectionInitiated: (endpointId, connectionInfo) async {
+        try {
+          await Nearby().acceptConnection(
+            endpointId,
+            onPayLoadRecieved: (endpointId, payload) {},
+          );
+          //will only add if successful
+          Provider.of<Players>(context)
+              .addPlayer(Player(connectionInfo.endpointName, endpointId));
+        } catch (exception) {
+          Scaffold.of(context).showSnackBar(SnackBar(
+            content: Text(exception.toString()),
+          ));
+        }
+      }, onConnectionResult: (endpointId, status) {
+        if (status != Status.CONNECTED) {
+          Provider.of<Players>(context).removePlayer(endpointId);
+        }
+      }, onDisconnected: (endpointId) {
+        Provider.of<Players>(context).removePlayer(endpointId);
+      });
 
+      Provider.of<User>(context).isHost = true;
+      // add your own name to list of players
+      Provider.of<Players>(context)
+          .addPlayer(Player(Provider.of<User>(context).nickName, null));
       // change state if advertising is started successfully
       Provider.of<World>(context).currentScreen = ScreenState.LobbyScreen;
     } catch (exception) {
@@ -120,14 +143,53 @@ class _StartScreenState extends State<StartScreen> {
       isLoading = true;
     });
 
+    BuildContext context = World.context;
     try {
       await Nearby().startDiscovery(
           Provider.of<User>(context).nickName, Strategy.P2P_STAR,
-          onEndpointFound: (endpointId, endpointName, serviceId) {},
-          onEndpointLost: (endpointId) {});
+          onEndpointFound: (endpointId, endpointName, serviceId) async {
+        try {
+          await Nearby().requestConnection(
+              Provider.of<User>(context).nickName, endpointId,
+              onConnectionInitiated: (endpointId, connectionInfo) async {
+            try {
+              await Nearby().acceptConnection(
+                endpointId,
+                onPayLoadRecieved: (endpointId, payload) {},
+              );
+              //will only add if successful
+              Provider.of<Players>(context)
+                  .addPlayer(Player(connectionInfo.endpointName, endpointId));
+            } catch (exception) {
+              Scaffold.of(context).showSnackBar(SnackBar(
+                content: Text(exception.toString()),
+              ));
+            }
+          }, onConnectionResult: (endpointId, status) {
+            if (status != Status.CONNECTED) {
+              Provider.of<Players>(context).removePlayer(endpointId);
+            } else {
+              Provider.of<World>(context).currentScreen =
+                  ScreenState.LobbyScreen;
+            }
+          }, onDisconnected: (endpointId) {
+            Provider.of<Players>(context).removePlayer(endpointId);
+          });
+        } catch (exception) {
+          print(exception.toString());
+          Scaffold.of(context).showSnackBar(SnackBar(
+            content: Text(exception.toString()),
+          ));
+        }
+      }, onEndpointLost: (endpointId) {});
 
-      // change state if advertising is started successfully
-      Provider.of<World>(context).currentScreen = ScreenState.LobbyScreen;
+      Provider.of<User>(context).isHost = false;
+      //add own name before start
+      Provider.of<Players>(context)
+          .addPlayer(Player(Provider.of<User>(context).nickName, null));
+      // change state if discovery is started successfully
+
+      Provider.of<World>(context).currentScreen = ScreenState.ConnectScreen;
     } catch (exception) {
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Text(exception.toString()),

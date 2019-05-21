@@ -1,19 +1,25 @@
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:monopoly_money/providers/players.dart';
 import 'package:monopoly_money/providers/user.dart';
 
-enum ScreenState { StartScreen, LobbyScreen, GameScreen }
+enum ScreenState { StartScreen, ConnectScreen, LobbyScreen, GameScreen }
 
 class World with ChangeNotifier {
+  static BuildContext context;
+
   //direct changeNotifiers
   ScreenState _currentScreen;
 
   //indirect changeNotifiers
   final User user;
-
+  final Players players;
   //init values upon creating the world
-  World() : user = User("User" + Random().nextInt(100).toString()) {
+  World()
+      : user = User("User" + Random().nextInt(100).toString()),
+        players = Players() {
     _currentScreen = ScreenState.StartScreen;
   }
 
@@ -22,5 +28,5 @@ class World with ChangeNotifier {
     notifyListeners();
   }
 
-  ScreenState getCurrentScreen() => _currentScreen;
+  ScreenState get currentScreen => _currentScreen;
 }

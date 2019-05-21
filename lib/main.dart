@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:monopoly_money/providers/world.dart';
+import 'package:monopoly_money/screens/connect_screen.dart';
 import 'package:monopoly_money/screens/game_screen.dart';
 import 'package:monopoly_money/screens/lobby_screen.dart';
 import 'package:monopoly_money/screens/start_screen.dart';
@@ -32,6 +33,9 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider.value(
           notifier: world.user,
         ),
+        ChangeNotifierProvider.value(
+          notifier: world.players,
+        ),
       ],
       child: MaterialApp(
         title: '\$\$Monopoly-Money\$\$',
@@ -57,9 +61,12 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       body: Consumer<World>(
         builder: (context, world, child) {
-          switch (world.getCurrentScreen()) {
+          World.context = context;
+          switch (world.currentScreen) {
             case ScreenState.StartScreen:
               return StartScreen();
+            case ScreenState.ConnectScreen:
+              return ConnectScreen();
             case ScreenState.LobbyScreen:
               return LobbyScreen();
             case ScreenState.GameScreen:
