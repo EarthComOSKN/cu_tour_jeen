@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 
 class User extends ChangeNotifier {
   bool isHost = false;
+  int money;
 
   String _nickName;
 
@@ -13,6 +14,16 @@ class User extends ChangeNotifier {
 
   set nickName(String s) {
     _nickName = s;
+    notifyListeners();
+  }
+
+  void addMoney(int amt) {
+    money += amt;
+    notifyListeners();
+  }
+
+  void subtractMoney(int amt) {
+    money -= amt;
     notifyListeners();
   }
 

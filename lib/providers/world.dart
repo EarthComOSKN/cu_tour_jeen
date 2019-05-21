@@ -9,7 +9,8 @@ enum ScreenState { StartScreen, ConnectScreen, LobbyScreen, GameScreen }
 
 class World with ChangeNotifier {
   static BuildContext context;
-
+  int goMoney;
+  String hostId;
   //direct changeNotifiers
   ScreenState _currentScreen;
 

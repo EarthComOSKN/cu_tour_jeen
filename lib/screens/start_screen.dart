@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:monopoly_money/providers/players.dart';
 import 'package:monopoly_money/providers/user.dart';
@@ -101,7 +103,7 @@ class _StartScreenState extends State<StartScreen> {
         try {
           await Nearby().acceptConnection(
             endpointId,
-            onPayLoadRecieved: (endpointId, payload) {},
+            onPayLoadRecieved: payloadRecieved,
           );
           //will only add if successful
           Provider.of<Players>(context)
@@ -146,47 +148,53 @@ class _StartScreenState extends State<StartScreen> {
     BuildContext context = World.context;
     try {
       await Nearby().startDiscovery(
-          Provider.of<User>(context).nickName, Strategy.P2P_STAR,
-          onEndpointFound: (endpointId, endpointName, serviceId) async {
-        try {
-          await Nearby().requestConnection(
-              Provider.of<User>(context).nickName, endpointId,
-              onConnectionInitiated: (endpointId, connectionInfo) async {
-            try {
-              await Nearby().acceptConnection(
-                endpointId,
-                onPayLoadRecieved: (endpointId, payload) {},
-              );
-              //will only add if successful
-              Provider.of<Players>(context)
-                  .addPlayer(Player(connectionInfo.endpointName, endpointId));
-            } catch (exception) {
-              Scaffold.of(context).showSnackBar(SnackBar(
-                content: Text(exception.toString()),
-              ));
-            }
-          }, onConnectionResult: (endpointId, status) {
-            if (status != Status.CONNECTED) {
+        Provider.of<User>(context).nickName,
+        Strategy.P2P_STAR,
+        onEndpointFound: (endpointId, endpointName, serviceId) async {
+          try {
+            await Nearby().requestConnection(
+                Provider.of<User>(context).nickName, endpointId,
+                onConnectionInitiated: (endpointId, connectionInfo) async {
+              try {
+                await Nearby().acceptConnection(
+                  endpointId,
+                  onPayLoadRecieved: payloadRecieved,
+                );
+                //will only add if successfully sent accept request
+                Provider.of<Players>(context)
+                    .addPlayer(Player(connectionInfo.endpointName, endpointId));
+              } catch (exception) {
+                Scaffold.of(context).showSnackBar(SnackBar(
+                  content: Text(exception.toString()),
+                ));
+              }
+            }, onConnectionResult: (endpointId, status) {
+              if (status != Status.CONNECTED) {
+                Provider.of<Players>(context).removePlayer(endpointId);
+              } else {
+                Provider.of<World>(context).currentScreen =
+                    ScreenState.LobbyScreen;
+                Provider.of<World>(context).hostId = endpointId;
+                //for securing connection error chances
+                Nearby().stopDiscovery();
+              }
+            }, onDisconnected: (endpointId) {
               Provider.of<Players>(context).removePlayer(endpointId);
-            } else {
-              Provider.of<World>(context).currentScreen =
-                  ScreenState.LobbyScreen;
-            }
-          }, onDisconnected: (endpointId) {
-            Provider.of<Players>(context).removePlayer(endpointId);
-          });
-        } catch (exception) {
-          print(exception.toString());
-          Scaffold.of(context).showSnackBar(SnackBar(
-            content: Text(exception.toString()),
-          ));
-        }
-      }, onEndpointLost: (endpointId) {});
+            });
+          } catch (exception) {
+            print(exception.toString());
+            Scaffold.of(context).showSnackBar(SnackBar(
+              content: Text(exception.toString()),
+            ));
+          }
+        },
+        onEndpointLost: (endpointId) {},
+      );
 
       Provider.of<User>(context).isHost = false;
       //add own name before start
       Provider.of<Players>(context)
-          .addPlayer(Player(Provider.of<User>(context).nickName, null));
+          .addPlayer(Player(Provider.of<User>(context).nickName, "0"));
       // change state if discovery is started successfully
 
       Provider.of<World>(context).currentScreen = ScreenState.ConnectScreen;
@@ -200,6 +208,52 @@ class _StartScreenState extends State<StartScreen> {
       setState(() {
         isLoading = false;
       });
+    }
+  }
+
+  //called on recieving payload
+  void payloadRecieved(String endpointId, Uint8List bytes) {
+    World world = Provider.of<World>(World.context);
+
+    List<String> payload = String.fromCharCodes(bytes).split(",");
+    print(payload[0]);
+    switch (payload[0]) {
+      case "start":
+        // method, starting-money, go-money, p1, p2, p3...
+        world.goMoney = int.parse(payload[2]);
+        world.user.money = int.parse(payload[1]);
+
+        // arrange names of player in same order but keep endpointId intact
+        // List<Player> list = Provider.of<Players>(World.context).playerList;
+        // list.firstWhere((p)=>s==p.nickName).endPointId
+        world.players.refreshPlayers(payload
+            .getRange(3, payload.length)
+            .map((s) => Player(s, "0"))
+            .toList());
+
+        world.currentScreen = ScreenState.GameScreen;
+
+        Nearby().stopAdvertising();
+        break;
+      case "pay":
+        // method, reciever, sender, money
+        if (payload[1] == world.user.nickName) {
+          world.user.addMoney(int.parse(payload[3]));
+        }
+
+        if (world.user.isHost) {
+          for (Player player in world.players.opponents) {
+            Nearby().sendPayload(player.endPointId, Uint8List.fromList(bytes));
+          }
+        }
+
+        break;
+      case "go":
+        // method, reciever, permitter
+        break;
+      case "get":
+        // method, reciever, permitter, money
+        break;
     }
   }
 }

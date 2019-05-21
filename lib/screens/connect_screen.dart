@@ -7,7 +7,10 @@ class ConnectScreen extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Text("Looking for Game Host"),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text("Looking for Game Host"),
+          ),
           CircularProgressIndicator(),
         ],
       ),

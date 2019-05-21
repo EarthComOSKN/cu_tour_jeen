@@ -38,7 +38,7 @@ class _MyAppState extends State<MyApp> {
         ),
       ],
       child: MaterialApp(
-        title: '\$\$Monopoly-Money\$\$',
+        title: 'Monopoly-Money',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
@@ -68,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
             case ScreenState.ConnectScreen:
               return ConnectScreen();
             case ScreenState.LobbyScreen:
-              return LobbyScreen();
+              return LobbyScreen(world.user.isHost);
             case ScreenState.GameScreen:
               return GameScreen();
           }

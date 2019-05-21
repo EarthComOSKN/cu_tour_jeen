@@ -1,16 +1,31 @@
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
+import 'package:monopoly_money/providers/user.dart';
+import 'package:monopoly_money/providers/world.dart';
+import 'package:provider/provider.dart';
 
 class Players with ChangeNotifier {
   final List<Player> _playerList;
   final Random _random;
+
+  List<Player> _opponents;
 
   Players()
       : _playerList = [],
         _random = Random();
 
   List<Player> get playerList => _playerList;
+
+  List<Player> get opponents {
+    if (_opponents != null) return _opponents;
+
+    _opponents = []..addAll(_playerList);
+    _opponents.removeWhere((player) =>
+        player.nickName == Provider.of<User>(World.context).nickName);
+
+    return _opponents;
+  }
 
   void addPlayers(List<Player> list) {
     _playerList.addAll(list);
