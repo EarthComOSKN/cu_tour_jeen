@@ -62,12 +62,20 @@ class _GamePanelState extends State<GamePanel> {
                             title: Text("Disconnect from Game?"),
                             actions: <Widget>[
                               RaisedButton(
-                                child: Text("Yes"),
+                                child: Text(
+                                  "Yes",
+                                  style: TextStyle(color: Colors.white),
+                                ),
                                 onPressed: () {
                                   Nearby().stopAllEndpoints();
                                   Navigator.of(context).pop();
-                                  Provider.of<World>(World.context)
-                                      .currentScreen = ScreenState.StartScreen;
+                                  Provider.of<World>(context).currentScreen =
+                                      ScreenState.StartScreen;
+                                  Provider.of<World>(context)
+                                      .gameLogs
+                                      .clearLogs();
+                                  Provider.of<Players>(context)
+                                      .removeAllPlayers();
                                 },
                               )
                             ],
@@ -173,6 +181,8 @@ void payDialog(Player reciever) {
                   buffer.write(amt.toString());
 
                   if (world.user.isHost) {
+                    //send log to self
+                    world.gameLogs.addLog(buffer.toString().split(","));
                     for (Player player in world.players.opponents) {
                       Nearby().sendPayload(player.endPointId,
                           Uint8List.fromList(buffer.toString().codeUnits));
@@ -246,7 +256,7 @@ class GameLogsListview extends StatelessWidget {
         return ListView.builder(
           itemCount: len,
           itemBuilder: (context, i) {
-            return LogTile(gameLogs.logs[len - i]);
+            return LogTile(gameLogs.logs[len - i - 1]);
           },
         );
       },

@@ -34,7 +34,10 @@ class LobbyScreen extends StatelessWidget {
                           title: Text("Leave Game Lobby?"),
                           actions: <Widget>[
                             RaisedButton(
-                              child: Text("Yes"),
+                              child: Text(
+                                "Yes",
+                                style: TextStyle(color: Colors.white),
+                              ),
                               onPressed: () {
                                 Nearby().stopAllEndpoints();
                                 Nearby()
@@ -42,6 +45,8 @@ class LobbyScreen extends StatelessWidget {
                                 Navigator.of(context).pop();
                                 Provider.of<World>(World.context)
                                     .currentScreen = ScreenState.StartScreen;
+                                Provider.of<Players>(context)
+                                    .removeAllPlayers();
                               },
                             )
                           ],
@@ -69,6 +74,10 @@ class LobbyScreen extends StatelessWidget {
                     buffer.write(",");
                     buffer.write(player.nickName);
                   }
+                  //send log to self
+                  Provider.of<World>(context)
+                      .gameLogs
+                      .addLog(buffer.toString().split(","));
                   for (var player in Provider.of<Players>(context).opponents) {
                     await Nearby().sendPayload(player.endPointId,
                         Uint8List.fromList(buffer.toString().codeUnits));

@@ -11,4 +11,9 @@ class GameLogs with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  void clearLogs() {
+    logs.clear();
+    notifyListeners();
+  }
 }

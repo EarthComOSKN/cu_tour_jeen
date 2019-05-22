@@ -95,10 +95,9 @@ class _StartScreenState extends State<StartScreen> {
     setState(() {
       isLoading = true;
     });
-    BuildContext context = World.context;
     try {
       await Nearby().startAdvertising(
-          Provider.of<User>(context).nickName, Strategy.P2P_STAR,
+          Provider.of<User>(World.context).nickName, Strategy.P2P_STAR,
           onConnectionInitiated: (endpointId, connectionInfo) async {
         try {
           await Nearby().acceptConnection(
@@ -106,29 +105,29 @@ class _StartScreenState extends State<StartScreen> {
             onPayLoadRecieved: payloadRecieved,
           );
           //will only add if successful
-          Provider.of<Players>(context)
+          Provider.of<Players>(World.context)
               .addPlayer(Player(connectionInfo.endpointName, endpointId));
         } catch (exception) {
-          Scaffold.of(context).showSnackBar(SnackBar(
+          Scaffold.of(World.context).showSnackBar(SnackBar(
             content: Text(exception.toString()),
           ));
         }
       }, onConnectionResult: (endpointId, status) {
         if (status != Status.CONNECTED) {
-          Provider.of<Players>(context).removePlayer(endpointId);
+          Provider.of<Players>(World.context).removePlayer(endpointId);
         }
       }, onDisconnected: (endpointId) {
-        Provider.of<Players>(context).removePlayer(endpointId);
+        Provider.of<Players>(World.context).removePlayer(endpointId);
       });
 
-      Provider.of<User>(context).isHost = true;
+      Provider.of<User>(World.context).isHost = true;
       // add your own name to list of players
-      Provider.of<Players>(context)
-          .addPlayer(Player(Provider.of<User>(context).nickName, null));
+      Provider.of<Players>(World.context)
+          .addPlayer(Player(Provider.of<User>(World.context).nickName, null));
       // change state if advertising is started successfully
-      Provider.of<World>(context).currentScreen = ScreenState.LobbyScreen;
+      Provider.of<World>(World.context).currentScreen = ScreenState.LobbyScreen;
     } catch (exception) {
-      Scaffold.of(context).showSnackBar(SnackBar(
+      Scaffold.of(World.context).showSnackBar(SnackBar(
         content: Text(exception.toString()),
       ));
     }
@@ -145,15 +144,14 @@ class _StartScreenState extends State<StartScreen> {
       isLoading = true;
     });
 
-    BuildContext context = World.context;
     try {
       await Nearby().startDiscovery(
-        Provider.of<User>(context).nickName,
+        Provider.of<User>(World.context).nickName,
         Strategy.P2P_STAR,
         onEndpointFound: (endpointId, endpointName, serviceId) async {
           try {
             await Nearby().requestConnection(
-                Provider.of<User>(context).nickName, endpointId,
+                Provider.of<User>(World.context).nickName, endpointId,
                 onConnectionInitiated: (endpointId, connectionInfo) async {
               try {
                 await Nearby().acceptConnection(
@@ -161,29 +159,29 @@ class _StartScreenState extends State<StartScreen> {
                   onPayLoadRecieved: payloadRecieved,
                 );
                 //will only add if successfully sent accept request
-                Provider.of<Players>(context)
+                Provider.of<Players>(World.context)
                     .addPlayer(Player(connectionInfo.endpointName, endpointId));
               } catch (exception) {
-                Scaffold.of(context).showSnackBar(SnackBar(
+                Scaffold.of(World.context).showSnackBar(SnackBar(
                   content: Text(exception.toString()),
                 ));
               }
             }, onConnectionResult: (endpointId, status) {
               if (status != Status.CONNECTED) {
-                Provider.of<Players>(context).removePlayer(endpointId);
+                Provider.of<Players>(World.context).removePlayer(endpointId);
               } else {
-                Provider.of<World>(context).currentScreen =
+                Provider.of<World>(World.context).currentScreen =
                     ScreenState.LobbyScreen;
-                Provider.of<World>(context).hostId = endpointId;
+                Provider.of<World>(World.context).hostId = endpointId;
                 //for securing connection error chances
                 Nearby().stopDiscovery();
               }
             }, onDisconnected: (endpointId) {
-              Provider.of<Players>(context).removePlayer(endpointId);
+              Provider.of<Players>(World.context).removePlayer(endpointId);
             });
           } catch (exception) {
             print(exception.toString());
-            Scaffold.of(context).showSnackBar(SnackBar(
+            Scaffold.of(World.context).showSnackBar(SnackBar(
               content: Text(exception.toString()),
             ));
           }
@@ -191,15 +189,16 @@ class _StartScreenState extends State<StartScreen> {
         onEndpointLost: (endpointId) {},
       );
 
-      Provider.of<User>(context).isHost = false;
+      Provider.of<User>(World.context).isHost = false;
       //add own name before start
-      Provider.of<Players>(context)
-          .addPlayer(Player(Provider.of<User>(context).nickName, "0"));
+      Provider.of<Players>(World.context)
+          .addPlayer(Player(Provider.of<User>(World.context).nickName, "0"));
       // change state if discovery is started successfully
 
-      Provider.of<World>(context).currentScreen = ScreenState.ConnectScreen;
+      Provider.of<World>(World.context).currentScreen =
+          ScreenState.ConnectScreen;
     } catch (exception) {
-      Scaffold.of(context).showSnackBar(SnackBar(
+      Scaffold.of(World.context).showSnackBar(SnackBar(
         content: Text(exception.toString()),
       ));
     }
@@ -282,8 +281,8 @@ class _StartScreenState extends State<StartScreen> {
         break;
       case "go-success":
         // method, reciever, permitter, allowed
-        if (payload[1] == world.user.nickName) {
-          world.user.addMoney(int.parse(payload[3]));
+        if (payload[1] == world.user.nickName && payload[3] == "true") {
+          world.user.addMoney(world.goMoney);
         }
 
         if (world.user.isHost) {
@@ -295,7 +294,7 @@ class _StartScreenState extends State<StartScreen> {
         break;
       case "get-success":
         // method, reciever, permitter, money, allowed
-        if (payload[1] == world.user.nickName) {
+        if (payload[1] == world.user.nickName && payload[4] == "true") {
           world.user.addMoney(int.parse(payload[3]));
         }
 
@@ -317,14 +316,20 @@ class _StartScreenState extends State<StartScreen> {
             title: Text("Allow $reciever to collect Go Money ?"),
             actions: <Widget>[
               RaisedButton(
-                child: Text("Allow"),
+                child: Text(
+                  "Allow",
+                  style: TextStyle(color: Colors.white),
+                ),
                 onPressed: () {
                   sendGoSuccessPayload(true, reciever);
                   Navigator.pop(context);
                 },
               ),
               RaisedButton(
-                child: Text("Deny"),
+                child: Text(
+                  "Deny",
+                  style: TextStyle(color: Colors.white),
+                ),
                 onPressed: () {
                   sendGoSuccessPayload(false, reciever);
                   Navigator.pop(context);
@@ -345,6 +350,10 @@ class _StartScreenState extends State<StartScreen> {
     buffer.write(allowed.toString());
 
     if (user.isHost) {
+      //send log to self
+      Provider.of<World>(World.context)
+          .gameLogs
+          .addLog(buffer.toString().split(","));
       for (Player player in Provider.of<Players>(World.context).opponents) {
         Nearby().sendPayload(
             player.endPointId, Uint8List.fromList(buffer.toString().codeUnits));
@@ -364,14 +373,20 @@ class _StartScreenState extends State<StartScreen> {
             title: Text("Allow $reciever to collect \$$money ?"),
             actions: <Widget>[
               RaisedButton(
-                child: Text("Allow"),
+                child: Text(
+                  "Allow",
+                  style: TextStyle(color: Colors.white),
+                ),
                 onPressed: () {
                   sendGetSuccessPayload(true, reciever, money);
                   Navigator.pop(context);
                 },
               ),
               RaisedButton(
-                child: Text("Deny"),
+                child: Text(
+                  "Deny",
+                  style: TextStyle(color: Colors.white),
+                ),
                 onPressed: () {
                   sendGetSuccessPayload(false, reciever, money);
                   Navigator.pop(context);
@@ -394,6 +409,10 @@ class _StartScreenState extends State<StartScreen> {
     buffer.write(allowed.toString());
 
     if (user.isHost) {
+      //send log to self
+      Provider.of<World>(World.context)
+          .gameLogs
+          .addLog(buffer.toString().split(","));
       for (Player player in Provider.of<Players>(World.context).opponents) {
         Nearby().sendPayload(
             player.endPointId, Uint8List.fromList(buffer.toString().codeUnits));
