@@ -50,7 +50,7 @@ class _GamePanelState extends State<GamePanel> {
             RaisedButton(
               child: Text("Bank"),
               onPressed: () {
-                TextEditingController t = TextEditingController();
+                Player player = Player("bank", "0");
                 showDialog(
                     context: World.context,
                     builder: (context) {
@@ -58,18 +58,39 @@ class _GamePanelState extends State<GamePanel> {
                         children: <Widget>[
                           RaisedButton(
                             child: Text("Pay"),
-                            onPressed: () async {
-                              World world = Provider.of<World>(World.context);
-                              int amt = int.parse(t.text);
-                              if (amt > 0 && world.user.money >= amt) {
-                                Navigator.of(context).pop();
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              payDialog(player);
+                            },
+                          ),
+                          RaisedButton(
+                            child: Text("Get"),
+                            onPressed: () {
+                              
+                            },
+                          ),
+                          RaisedButton(
+                            child: Text("Pass Go"),
+                            onPressed: () {
+                              World world = Provider.of<World>(context);
+                              Player rp = world.players.getRandomOpponent();
+                              StringBuffer buffer = StringBuffer("go,");
+                              buffer.write(world.user.nickName);
+                              buffer.write(",");
+                              buffer.write(rp.nickName);
+                              if (world.user.isHost) {
+                                Nearby().sendPayload(
+                                    rp.endPointId,
+                                    Uint8List.fromList(
+                                        buffer.toString().codeUnits));
+                              } else {
+                                Nearby().sendPayload(
+                                    world.hostId,
+                                    Uint8List.fromList(
+                                        buffer.toString().codeUnits));
                               }
                             },
                           ),
-                          TextField(
-                            keyboardType: TextInputType.number,
-                            controller: t,
-                          )
                         ],
                       );
                     });
@@ -92,53 +113,55 @@ List<Widget> getPlayerTiles(Players players) {
     return RaisedButton(
       child: Text(player.nickName),
       onPressed: () {
-        TextEditingController t = TextEditingController();
-        showDialog(
-            context: World.context,
-            builder: (context) {
-              return SimpleDialog(
-                children: <Widget>[
-                  RaisedButton(
-                    child: Text("Pay"),
-                    onPressed: () async {
-                      World world = Provider.of<World>(World.context);
-                      int amt = int.parse(t.text);
-                      if (amt > 0 && world.user.money >= amt) {
-                        StringBuffer buffer = StringBuffer("pay,");
-                        buffer.write(player.nickName);
-                        buffer.write(",");
-                        buffer.write(world.user.nickName);
-                        buffer.write(",");
-                        buffer.write(amt.toString());
-
-                        if (world.user.isHost) {
-                          for (Player player in world.players.opponents) {
-                            Nearby().sendPayload(
-                                player.endPointId,
-                                Uint8List.fromList(
-                                    buffer.toString().codeUnits));
-                          }
-                        } else {
-                          Nearby().sendPayload(world.hostId,
-                              Uint8List.fromList(buffer.toString().codeUnits));
-                        }
-
-                        world.user.subtractMoney(amt);
-
-                        Navigator.of(context).pop();
-                      }
-                    },
-                  ),
-                  TextField(
-                    keyboardType: TextInputType.number,
-                    controller: t,
-                  )
-                ],
-              );
-            });
+        payDialog(player);
       },
     );
   }).toList();
+}
+
+void payDialog(Player reciever) {
+  TextEditingController t = TextEditingController();
+  showDialog(
+      context: World.context,
+      builder: (context) {
+        return SimpleDialog(
+          children: <Widget>[
+            RaisedButton(
+              child: Text("Pay"),
+              onPressed: () {
+                World world = Provider.of<World>(World.context);
+                int amt = int.parse(t.text);
+                if (amt > 0 && world.user.money >= amt) {
+                  StringBuffer buffer = StringBuffer("pay,");
+                  buffer.write(reciever.nickName);
+                  buffer.write(",");
+                  buffer.write(world.user.nickName);
+                  buffer.write(",");
+                  buffer.write(amt.toString());
+
+                  if (world.user.isHost) {
+                    for (Player player in world.players.opponents) {
+                      Nearby().sendPayload(player.endPointId,
+                          Uint8List.fromList(buffer.toString().codeUnits));
+                    }
+                  } else {
+                    Nearby().sendPayload(world.hostId,
+                        Uint8List.fromList(buffer.toString().codeUnits));
+                  }
+
+                  world.user.subtractMoney(amt);
+
+                  Navigator.of(context).pop();
+                }
+              },
+            ),
+            TextField(
+              keyboardType: TextInputType.number,
+              controller: t,
+            )
+          ],
+        );
+      });
 }
 
 class GameLogsListview extends StatefulWidget {

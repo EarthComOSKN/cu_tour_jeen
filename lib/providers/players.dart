@@ -52,6 +52,10 @@ class Players with ChangeNotifier {
     _playerList.clear();
     notifyListeners();
   }
+
+  Player getRandomOpponent() {
+    return opponents[_random.nextInt(opponents.length)];
+  }
 }
 
 class Player {

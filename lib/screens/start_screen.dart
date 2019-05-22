@@ -243,17 +243,90 @@ class _StartScreenState extends State<StartScreen> {
 
         if (world.user.isHost) {
           for (Player player in world.players.opponents) {
-            Nearby().sendPayload(player.endPointId, Uint8List.fromList(bytes));
+            Nearby().sendPayload(player.endPointId, bytes);
           }
         }
 
         break;
       case "go":
         // method, reciever, permitter
+        if (payload[2] == world.user.nickName) {
+          // show sheet
+          goDialog(payload[2]);
+        } else if (world.user.isHost) {
+          //forward to permitter
+          Nearby().sendPayload(
+              world.players.playerList
+                  .firstWhere((p) => p.nickName == payload[2])
+                  .endPointId,
+              bytes);
+        }
+
         break;
       case "get":
         // method, reciever, permitter, money
         break;
+      case "go-success":
+        // method, reciever, permitter
+        if (payload[1] == world.user.nickName) {
+          world.user.addMoney(int.parse(payload[3]));
+        }
+
+        if (world.user.isHost) {
+          for (Player player in world.players.opponents) {
+            Nearby().sendPayload(player.endPointId, bytes);
+          }
+        }
+
+        break;
+      case "get-success":
+        // method, reciever, permitter, money
+        break;
+    }
+  }
+
+  void goDialog(String reciever) {
+    showDialog(
+        barrierDismissible: false,
+        context: World.context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Allow $reciever to collect Go Money ?"),
+            actions: <Widget>[
+              RaisedButton(
+                child: Text("Allow"),
+                onPressed: () {
+                  sendGoPayload(true, reciever);
+                  Navigator.pop(context);
+                },
+              ),
+              RaisedButton(
+                child: Text("Deny"),
+                onPressed: () {
+                  sendGoPayload(false, reciever);
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+  void sendGoPayload(bool allowed, String reciever) {
+    User user = Provider.of<User>(World.context);
+    StringBuffer buffer = StringBuffer("go-success,");
+    buffer.write(reciever);
+    buffer.write(",");
+    buffer.write(user.nickName);
+
+    if (user.isHost) {
+      for (Player player in Provider.of<Players>(World.context).opponents) {
+        Nearby().sendPayload(
+            player.endPointId, Uint8List.fromList(buffer.toString().codeUnits));
+      }
+    } else {
+      Nearby().sendPayload(Provider.of<World>(World.context).hostId,
+          Uint8List.fromList(buffer.toString().codeUnits));
     }
   }
 }
