@@ -17,16 +17,18 @@ class LobbyScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(30.0),
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 5),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              Text("Game Settings\n\n"),
               IconButton(
-                icon: Icon(Icons.close),
+                icon: Icon(
+                  Icons.close,
+                  color: Colors.grey,
+                ),
                 onPressed: () {
                   showDialog(
                       context: context,
@@ -36,6 +38,7 @@ class LobbyScreen extends StatelessWidget {
                           title: Text("Leave Game Lobby?"),
                           actions: <Widget>[
                             RaisedButton(
+                              shape: roundedBorderShape,
                               child: Text(
                                 "Yes",
                                 style: TextStyle(color: Colors.white),
@@ -58,12 +61,41 @@ class LobbyScreen extends StatelessWidget {
               ),
             ],
           ),
-          Text("Starting Money: 1500\$"),
-          Text("Pass Go Money: 200\$\n\n"),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Text(
+                "Starting Balance:",
+                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w300),
+              ),
+              Text(
+                "1500\$",
+                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w300),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Text(
+                "Go Money:",
+                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w300),
+              ),
+              Text(
+                "200\$",
+                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w300),
+              ),
+            ],
+          ),
           if (hostScreen)
             Center(
               child: RaisedButton(
-                child: Text("Start"),
+                shape: roundedBorderShape,
+                color: Colors.blue,
+                child: Text(
+                  "Start",
+                  style: TextStyle(color: Colors.white),
+                ),
                 onPressed: () async {
                   Provider.of<World>(context).currentScreen =
                       ScreenState.GameScreen;
@@ -87,7 +119,11 @@ class LobbyScreen extends StatelessWidget {
                 },
               ),
             ),
-          Text("Lobby"),
+          Divider(),
+          Text(
+            " Lobby",
+            style: TextStyle(fontSize: 30, fontWeight: FontWeight.w200),
+          ),
           Expanded(
             child: Consumer<Players>(
               builder: (context, players, child) {

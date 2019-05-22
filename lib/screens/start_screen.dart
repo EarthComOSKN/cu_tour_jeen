@@ -31,7 +31,6 @@ class _StartScreenState extends State<StartScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          
           Padding(
             padding: const EdgeInsets.only(bottom: 80),
             child: RichText(
@@ -72,6 +71,8 @@ class _StartScreenState extends State<StartScreen> {
                       content: TextField(
                         controller: t,
                         decoration: InputDecoration(hintText: "Nick Name"),
+                        autofocus: true,
+                        textAlign: TextAlign.center,
                       ),
                       actions: <Widget>[
                         RaisedButton(
@@ -119,7 +120,7 @@ class _StartScreenState extends State<StartScreen> {
                 child: Text(
                   "HOST",
                   style: TextStyle(
-                      fontSize: 50,
+                      fontSize: 40,
                       fontWeight: FontWeight.w300,
                       color: Colors.white),
                 ),
@@ -132,7 +133,7 @@ class _StartScreenState extends State<StartScreen> {
                 child: Text(
                   "JOIN",
                   style: TextStyle(
-                      fontSize: 50,
+                      fontSize: 40,
                       fontWeight: FontWeight.w300,
                       color: Colors.white),
                 ),

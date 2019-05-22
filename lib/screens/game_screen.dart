@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:monopoly_money/components/log_tile.dart';
 import 'package:monopoly_money/providers/game_logs.dart';
 import 'package:monopoly_money/providers/players.dart';
@@ -17,7 +18,7 @@ class GameScreen extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.all(50.0),
+            padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 10),
             child: GamePanel(),
           ),
           Padding(
@@ -28,7 +29,7 @@ class GameScreen extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: Text(
               "Logs",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w200),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w300),
             ),
           ),
           Expanded(child: GameLogsListview()),
@@ -60,11 +61,18 @@ class _GamePanelState extends State<GamePanel> {
               children: <Widget>[
                 Consumer<User>(
                   builder: (context, user, child) {
-                    return Text(user.money.toString());
+                    return Text(
+                      "${user.money.toString()}\$",
+                      style:
+                          TextStyle(fontWeight: FontWeight.w300, fontSize: 30),
+                    );
                   },
                 ),
                 IconButton(
-                  icon: Icon(Icons.close),
+                  icon: Icon(
+                    Icons.close,
+                    color: Colors.grey,
+                  ),
                   onPressed: () {
                     showDialog(
                         context: context,
@@ -99,7 +107,12 @@ class _GamePanelState extends State<GamePanel> {
               ],
             ),
             RaisedButton(
-              child: Text("Bank"),
+              color: Colors.yellow[700],
+              shape: roundedBorderShape,
+              child: Text(
+                "Bank",
+                style: whiteTextStyle,
+              ),
               onPressed: () {
                 Player player = Player("bank", "0");
                 showDialog(
@@ -108,23 +121,41 @@ class _GamePanelState extends State<GamePanel> {
                       return SimpleDialog(
                         title: Text("Bank"),
                         shape: roundedBorderShape,
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 40, vertical: 10),
                         children: <Widget>[
                           RaisedButton(
-                            child: Text("Pay",textAlign: TextAlign.center,),
+                            shape: roundedBorderShape,
+                            color: Colors.green,
+                            child: Text(
+                              "PAY",
+                              style: whiteTextStyle,
+                              textAlign: TextAlign.center,
+                            ),
                             onPressed: () {
                               Navigator.of(context).pop();
                               payDialog(player);
                             },
                           ),
                           RaisedButton(
-                            child: Text("Get"),
+                            shape: roundedBorderShape,
+                            color: Colors.yellow[700],
+                            child: Text(
+                              "GET",
+                              style: whiteTextStyle,
+                            ),
                             onPressed: () {
                               Navigator.of(context).pop();
                               getDialog();
                             },
                           ),
                           RaisedButton(
-                            child: Text("Pass Go"),
+                            shape: roundedBorderShape,
+                            color: Colors.brown,
+                            child: Text(
+                              "PASS GO",
+                              style: whiteTextStyle,
+                            ),
                             onPressed: () {
                               World world = Provider.of<World>(context);
                               Player rp = world.players.getRandomOpponent();
@@ -164,10 +195,22 @@ List<Widget> getPlayerTiles(Players players) {
   String userNick = Provider.of<User>(World.context).nickName;
   return players.playerList.map((player) {
     if (userNick == player.nickName)
-      return RaisedButton(child: Text(player.nickName), onPressed: null);
+      return RaisedButton(
+          child: Text(
+            player.nickName,
+            style: whiteTextStyle,
+          ),
+          shape: roundedBorderShape,
+          color: Colors.blue,
+          onPressed: null);
 
     return RaisedButton(
-      child: Text(player.nickName),
+      shape: roundedBorderShape,
+      color: Colors.blue,
+      child: Text(
+        player.nickName,
+        style: whiteTextStyle,
+      ),
       onPressed: () {
         payDialog(player);
       },
@@ -183,10 +226,15 @@ void payDialog(Player reciever) {
         return SimpleDialog(
           title: Text(reciever.nickName),
           shape: roundedBorderShape,
+          contentPadding: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
           children: <Widget>[
             RaisedButton(
-              color: Colors.green[100],
-              child: Text("Pay"),
+              shape: roundedBorderShape,
+              color: Colors.green,
+              child: Text(
+                "PAY",
+                style: whiteTextStyle,
+              ),
               onPressed: () {
                 World world = Provider.of<World>(World.context);
                 int amt = int.parse(t.text);
@@ -218,7 +266,10 @@ void payDialog(Player reciever) {
             ),
             TextField(
               keyboardType: TextInputType.number,
+              inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
               controller: t,
+              autofocus: true,
+              textAlign: TextAlign.center,
             )
           ],
         );
@@ -233,10 +284,14 @@ void getDialog() {
         return SimpleDialog(
           title: Text("Bank"),
           shape: roundedBorderShape,
+          contentPadding: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
           children: <Widget>[
             RaisedButton(
-              color: Colors.yellow[100],
-              child: Text("Get"),
+              color: Colors.yellow[700],
+              child: Text(
+                "GET",
+                style: whiteTextStyle,
+              ),
               onPressed: () {
                 World world = Provider.of<World>(World.context);
                 int amt = int.parse(t.text);
@@ -261,7 +316,10 @@ void getDialog() {
             ),
             TextField(
               keyboardType: TextInputType.number,
+              inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
               controller: t,
+              autofocus: true,
+              textAlign: TextAlign.center,
             )
           ],
         );

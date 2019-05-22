@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:monopoly_money/providers/players.dart';
 import 'package:monopoly_money/providers/world.dart';
+import 'package:monopoly_money/theme/style.dart';
 import 'package:nearby_connections/nearby_connections.dart';
 import 'package:provider/provider.dart';
 
@@ -13,13 +14,17 @@ class ConnectScreen extends StatelessWidget {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text("Looking for a Game Host"),
+            child: Text(
+              "Looking for a Game Host",
+              style: TextStyle(fontSize: 25),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: CircularProgressIndicator(),
           ),
           RaisedButton(
+            shape: roundedBorderShape,
             child: Text(
               "Cancel",
             ),
