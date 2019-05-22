@@ -36,6 +36,9 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider.value(
           notifier: world.players,
         ),
+        ChangeNotifierProvider.value(
+          notifier: world.gameLogs,
+        ),
       ],
       child: MaterialApp(
         title: 'Monopoly-Money',

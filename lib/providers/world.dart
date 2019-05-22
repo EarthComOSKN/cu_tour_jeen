@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:monopoly_money/providers/game_logs.dart';
 import 'package:monopoly_money/providers/players.dart';
 import 'package:monopoly_money/providers/user.dart';
 
@@ -17,9 +18,11 @@ class World with ChangeNotifier {
   //indirect changeNotifiers
   final User user;
   final Players players;
+  final GameLogs gameLogs;
   //init values upon creating the world
   World()
       : user = User("User" + Random().nextInt(100).toString()),
+        gameLogs = GameLogs(),
         players = Players() {
     _currentScreen = ScreenState.StartScreen;
   }

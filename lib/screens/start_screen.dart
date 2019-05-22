@@ -216,6 +216,9 @@ class _StartScreenState extends State<StartScreen> {
     World world = Provider.of<World>(World.context);
 
     List<String> payload = String.fromCharCodes(bytes).split(",");
+    // storing game logs for use later
+    world.gameLogs.addLog(payload);
+
     print(payload[0]);
     switch (payload[0]) {
       case "start":
@@ -278,7 +281,7 @@ class _StartScreenState extends State<StartScreen> {
         }
         break;
       case "go-success":
-        // method, reciever, permitter
+        // method, reciever, permitter, allowed
         if (payload[1] == world.user.nickName) {
           world.user.addMoney(int.parse(payload[3]));
         }
@@ -291,7 +294,7 @@ class _StartScreenState extends State<StartScreen> {
 
         break;
       case "get-success":
-        // method, reciever, permitter, money
+        // method, reciever, permitter, money, allowed
         if (payload[1] == world.user.nickName) {
           world.user.addMoney(int.parse(payload[3]));
         }
@@ -338,6 +341,8 @@ class _StartScreenState extends State<StartScreen> {
     buffer.write(reciever);
     buffer.write(",");
     buffer.write(user.nickName);
+    buffer.write(",");
+    buffer.write(allowed.toString());
 
     if (user.isHost) {
       for (Player player in Provider.of<Players>(World.context).opponents) {
@@ -385,6 +390,8 @@ class _StartScreenState extends State<StartScreen> {
     buffer.write(user.nickName);
     buffer.write(",");
     buffer.write(money);
+    buffer.write(",");
+    buffer.write(allowed.toString());
 
     if (user.isHost) {
       for (Player player in Provider.of<Players>(World.context).opponents) {

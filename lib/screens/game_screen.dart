@@ -1,6 +1,8 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:monopoly_money/components/log_tile.dart';
+import 'package:monopoly_money/providers/game_logs.dart';
 import 'package:monopoly_money/providers/players.dart';
 import 'package:monopoly_money/providers/user.dart';
 import 'package:monopoly_money/providers/world.dart';
@@ -17,7 +19,7 @@ class GameScreen extends StatelessWidget {
           children: <Widget>[
             GamePanel(),
             Text("Game Logs"),
-            GameLogsListview(),
+            Expanded(child: GameLogsListview()),
           ],
         ),
       ),
@@ -42,10 +44,38 @@ class _GamePanelState extends State<GamePanel> {
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Consumer<User>(
-              builder: (context, user, child) {
-                return Text(user.money.toString());
-              },
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Consumer<User>(
+                  builder: (context, user, child) {
+                    return Text(user.money.toString());
+                  },
+                ),
+                IconButton(
+                  icon: Icon(Icons.close),
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: Text("Disconnect from Game?"),
+                            actions: <Widget>[
+                              RaisedButton(
+                                child: Text("Yes"),
+                                onPressed: () {
+                                  Nearby().stopAllEndpoints();
+                                  Navigator.of(context).pop();
+                                  Provider.of<World>(World.context)
+                                      .currentScreen = ScreenState.StartScreen;
+                                },
+                              )
+                            ],
+                          );
+                        });
+                  },
+                ),
+              ],
             ),
             RaisedButton(
               child: Text("Bank"),
@@ -207,14 +237,19 @@ void getDialog() {
       });
 }
 
-class GameLogsListview extends StatefulWidget {
-  @override
-  _GameLogsListviewState createState() => _GameLogsListviewState();
-}
-
-class _GameLogsListviewState extends State<GameLogsListview> {
+class GameLogsListview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Text("Logs Appear here...");
+    return Consumer<GameLogs>(
+      builder: (context, gameLogs, child) {
+        int len = gameLogs.logs.length;
+        return ListView.builder(
+          itemCount: len,
+          itemBuilder: (context, i) {
+            return LogTile(gameLogs.logs[len - i]);
+          },
+        );
+      },
+    );
   }
 }

@@ -20,7 +20,37 @@ class LobbyScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text("Game Settings\n\n"),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text("Game Settings\n\n"),
+              IconButton(
+                icon: Icon(Icons.close),
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text("Leave Game Lobby?"),
+                          actions: <Widget>[
+                            RaisedButton(
+                              child: Text("Yes"),
+                              onPressed: () {
+                                Nearby().stopAllEndpoints();
+                                Nearby()
+                                    .stopAdvertising(); //discover was already stopped before reaching here
+                                Navigator.of(context).pop();
+                                Provider.of<World>(World.context)
+                                    .currentScreen = ScreenState.StartScreen;
+                              },
+                            )
+                          ],
+                        );
+                      });
+                },
+              ),
+            ],
+          ),
           Text("Starting Money: 1500\$"),
           Text("Pass Go Money: 200\$\n\n"),
           if (hostScreen)
@@ -34,7 +64,7 @@ class LobbyScreen extends StatelessWidget {
                   StringBuffer buffer = StringBuffer("start,1500,200");
                   Provider.of<World>(context).goMoney = 200;
                   Provider.of<User>(context).money = 1500;
-                  
+
                   for (var player in Provider.of<Players>(context).playerList) {
                     buffer.write(",");
                     buffer.write(player.nickName);
