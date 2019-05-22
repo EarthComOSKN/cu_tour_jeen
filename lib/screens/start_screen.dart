@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:monopoly_money/providers/players.dart';
 import 'package:monopoly_money/providers/user.dart';
 import 'package:monopoly_money/providers/world.dart';
+import 'package:monopoly_money/theme/style.dart';
 import 'package:nearby_connections/nearby_connections.dart';
 import 'package:provider/provider.dart';
 
@@ -30,6 +31,34 @@ class _StartScreenState extends State<StartScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
+          
+          Padding(
+            padding: const EdgeInsets.only(bottom: 80),
+            child: RichText(
+              text: TextSpan(
+                children: <TextSpan>[
+                  TextSpan(
+                      text: "\$\$ ",
+                      style: TextStyle(
+                          fontSize: 25,
+                          color: Colors.blue,
+                          fontWeight: FontWeight.w900)),
+                  TextSpan(
+                      text: "Monopoly-Money",
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w900)),
+                  TextSpan(
+                      text: " \$\$",
+                      style: TextStyle(
+                          fontSize: 25,
+                          color: Colors.blue,
+                          fontWeight: FontWeight.w900)),
+                ],
+              ),
+            ),
+          ),
           GestureDetector(
             onTap: () {
               //edit the userNickName onTap
@@ -38,6 +67,7 @@ class _StartScreenState extends State<StartScreen> {
                   context: context,
                   builder: (context) {
                     return AlertDialog(
+                      shape: roundedBorderShape,
                       title: Text("Set NickName"),
                       content: TextField(
                         controller: t,
@@ -45,6 +75,7 @@ class _StartScreenState extends State<StartScreen> {
                       ),
                       actions: <Widget>[
                         RaisedButton(
+                          shape: roundedBorderShape,
                           child: Text(
                             "Set",
                             style: TextStyle(color: Colors.white),
@@ -65,9 +96,15 @@ class _StartScreenState extends State<StartScreen> {
               builder: (context, user, child) {
                 return Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    user.nickName,
-                    style: TextStyle(fontSize: 20),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Text(
+                        user.nickName,
+                        style: TextStyle(fontSize: 30),
+                      ),
+                      Icon(Icons.edit)
+                    ],
                   ),
                 );
               },
@@ -77,11 +114,28 @@ class _StartScreenState extends State<StartScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               RaisedButton(
-                child: Text("HOST"),
+                color: Colors.blue,
+                padding: EdgeInsets.all(8),
+                child: Text(
+                  "HOST",
+                  style: TextStyle(
+                      fontSize: 50,
+                      fontWeight: FontWeight.w300,
+                      color: Colors.white),
+                ),
                 onPressed: onPressHost,
               ),
+              VerticalDivider(),
               RaisedButton(
-                child: Text("JOIN"),
+                color: Colors.blue,
+                padding: EdgeInsets.all(8),
+                child: Text(
+                  "JOIN",
+                  style: TextStyle(
+                      fontSize: 50,
+                      fontWeight: FontWeight.w300,
+                      color: Colors.white),
+                ),
                 onPressed: onPressJoin,
               )
             ],
@@ -313,6 +367,7 @@ class _StartScreenState extends State<StartScreen> {
         context: World.context,
         builder: (context) {
           return AlertDialog(
+            shape: roundedBorderShape,
             title: Text("Allow $reciever to collect Go Money ?"),
             actions: <Widget>[
               RaisedButton(
@@ -370,6 +425,7 @@ class _StartScreenState extends State<StartScreen> {
         context: World.context,
         builder: (context) {
           return AlertDialog(
+            shape: roundedBorderShape,
             title: Text("Allow $reciever to collect \$$money ?"),
             actions: <Widget>[
               RaisedButton(

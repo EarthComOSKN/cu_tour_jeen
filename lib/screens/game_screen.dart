@@ -6,22 +6,33 @@ import 'package:monopoly_money/providers/game_logs.dart';
 import 'package:monopoly_money/providers/players.dart';
 import 'package:monopoly_money/providers/user.dart';
 import 'package:monopoly_money/providers/world.dart';
+import 'package:monopoly_money/theme/style.dart';
 import 'package:nearby_connections/nearby_connections.dart';
 import 'package:provider/provider.dart';
 
 class GameScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(50.0),
-      child: Center(
-        child: Column(
-          children: <Widget>[
-            GamePanel(),
-            Text("Game Logs"),
-            Expanded(child: GameLogsListview()),
-          ],
-        ),
+    return Center(
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(50.0),
+            child: GamePanel(),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Divider(),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              "Logs",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w200),
+            ),
+          ),
+          Expanded(child: GameLogsListview()),
+        ],
       ),
     );
   }
@@ -59,9 +70,11 @@ class _GamePanelState extends State<GamePanel> {
                         context: context,
                         builder: (context) {
                           return AlertDialog(
+                            shape: roundedBorderShape,
                             title: Text("Disconnect from Game?"),
                             actions: <Widget>[
                               RaisedButton(
+                                shape: roundedBorderShape,
                                 child: Text(
                                   "Yes",
                                   style: TextStyle(color: Colors.white),
@@ -93,9 +106,11 @@ class _GamePanelState extends State<GamePanel> {
                     context: World.context,
                     builder: (context) {
                       return SimpleDialog(
+                        title: Text("Bank"),
+                        shape: roundedBorderShape,
                         children: <Widget>[
                           RaisedButton(
-                            child: Text("Pay"),
+                            child: Text("Pay",textAlign: TextAlign.center,),
                             onPressed: () {
                               Navigator.of(context).pop();
                               payDialog(player);
@@ -166,8 +181,11 @@ void payDialog(Player reciever) {
       context: World.context,
       builder: (context) {
         return SimpleDialog(
+          title: Text(reciever.nickName),
+          shape: roundedBorderShape,
           children: <Widget>[
             RaisedButton(
+              color: Colors.green[100],
               child: Text("Pay"),
               onPressed: () {
                 World world = Provider.of<World>(World.context);
@@ -213,8 +231,11 @@ void getDialog() {
       context: World.context,
       builder: (context) {
         return SimpleDialog(
+          title: Text("Bank"),
+          shape: roundedBorderShape,
           children: <Widget>[
             RaisedButton(
+              color: Colors.yellow[100],
               child: Text("Get"),
               onPressed: () {
                 World world = Provider.of<World>(World.context);

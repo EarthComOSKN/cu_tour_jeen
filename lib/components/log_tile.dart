@@ -75,6 +75,7 @@ class LogTile extends StatelessWidget {
     }
 
     return Container(
+      margin: EdgeInsets.all(8.0),
       color: c,
       child: Center(
         child: RichText(

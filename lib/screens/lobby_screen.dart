@@ -5,6 +5,7 @@ import 'package:monopoly_money/components/player_tile.dart';
 import 'package:monopoly_money/providers/players.dart';
 import 'package:monopoly_money/providers/user.dart';
 import 'package:monopoly_money/providers/world.dart';
+import 'package:monopoly_money/theme/style.dart';
 import 'package:nearby_connections/nearby_connections.dart';
 import 'package:provider/provider.dart';
 
@@ -31,6 +32,7 @@ class LobbyScreen extends StatelessWidget {
                       context: context,
                       builder: (context) {
                         return AlertDialog(
+                          shape: roundedBorderShape,
                           title: Text("Leave Game Lobby?"),
                           actions: <Widget>[
                             RaisedButton(
