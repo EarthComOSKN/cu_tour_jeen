@@ -66,7 +66,8 @@ class _GamePanelState extends State<GamePanel> {
                           RaisedButton(
                             child: Text("Get"),
                             onPressed: () {
-                              
+                              Navigator.of(context).pop();
+                              getDialog();
                             },
                           ),
                           RaisedButton(
@@ -89,6 +90,8 @@ class _GamePanelState extends State<GamePanel> {
                                     Uint8List.fromList(
                                         buffer.toString().codeUnits));
                               }
+
+                              Navigator.of(context).pop();
                             },
                           ),
                         ],
@@ -153,6 +156,46 @@ void payDialog(Player reciever) {
 
                   Navigator.of(context).pop();
                 }
+              },
+            ),
+            TextField(
+              keyboardType: TextInputType.number,
+              controller: t,
+            )
+          ],
+        );
+      });
+}
+
+void getDialog() {
+  TextEditingController t = TextEditingController();
+  showDialog(
+      context: World.context,
+      builder: (context) {
+        return SimpleDialog(
+          children: <Widget>[
+            RaisedButton(
+              child: Text("Get"),
+              onPressed: () {
+                World world = Provider.of<World>(World.context);
+                int amt = int.parse(t.text);
+                Player permitter = world.players.getRandomOpponent();
+                StringBuffer buffer = StringBuffer("get,");
+                buffer.write(world.user.nickName);
+                buffer.write(",");
+                buffer.write(permitter.nickName);
+                buffer.write(",");
+                buffer.write(amt.toString());
+
+                if (world.user.isHost) {
+                  Nearby().sendPayload(permitter.endPointId,
+                      Uint8List.fromList(buffer.toString().codeUnits));
+                } else {
+                  Nearby().sendPayload(world.hostId,
+                      Uint8List.fromList(buffer.toString().codeUnits));
+                }
+
+                Navigator.of(context).pop();
               },
             ),
             TextField(

@@ -252,7 +252,7 @@ class _StartScreenState extends State<StartScreen> {
         // method, reciever, permitter
         if (payload[2] == world.user.nickName) {
           // show sheet
-          goDialog(payload[2]);
+          permitGoDialog(payload[1]);
         } else if (world.user.isHost) {
           //forward to permitter
           Nearby().sendPayload(
@@ -265,6 +265,17 @@ class _StartScreenState extends State<StartScreen> {
         break;
       case "get":
         // method, reciever, permitter, money
+        if (payload[2] == world.user.nickName) {
+          // show sheet
+          permitGetDialog(payload[1], payload[3]);
+        } else if (world.user.isHost) {
+          //forward to permitter
+          Nearby().sendPayload(
+              world.players.playerList
+                  .firstWhere((p) => p.nickName == payload[2])
+                  .endPointId,
+              bytes);
+        }
         break;
       case "go-success":
         // method, reciever, permitter
@@ -281,11 +292,20 @@ class _StartScreenState extends State<StartScreen> {
         break;
       case "get-success":
         // method, reciever, permitter, money
+        if (payload[1] == world.user.nickName) {
+          world.user.addMoney(int.parse(payload[3]));
+        }
+
+        if (world.user.isHost) {
+          for (Player player in world.players.opponents) {
+            Nearby().sendPayload(player.endPointId, bytes);
+          }
+        }
         break;
     }
   }
 
-  void goDialog(String reciever) {
+  void permitGoDialog(String reciever) {
     showDialog(
         barrierDismissible: false,
         context: World.context,
@@ -296,14 +316,14 @@ class _StartScreenState extends State<StartScreen> {
               RaisedButton(
                 child: Text("Allow"),
                 onPressed: () {
-                  sendGoPayload(true, reciever);
+                  sendGoSuccessPayload(true, reciever);
                   Navigator.pop(context);
                 },
               ),
               RaisedButton(
                 child: Text("Deny"),
                 onPressed: () {
-                  sendGoPayload(false, reciever);
+                  sendGoSuccessPayload(false, reciever);
                   Navigator.pop(context);
                 },
               ),
@@ -312,12 +332,59 @@ class _StartScreenState extends State<StartScreen> {
         });
   }
 
-  void sendGoPayload(bool allowed, String reciever) {
+  void sendGoSuccessPayload(bool allowed, String reciever) {
     User user = Provider.of<User>(World.context);
     StringBuffer buffer = StringBuffer("go-success,");
     buffer.write(reciever);
     buffer.write(",");
     buffer.write(user.nickName);
+
+    if (user.isHost) {
+      for (Player player in Provider.of<Players>(World.context).opponents) {
+        Nearby().sendPayload(
+            player.endPointId, Uint8List.fromList(buffer.toString().codeUnits));
+      }
+    } else {
+      Nearby().sendPayload(Provider.of<World>(World.context).hostId,
+          Uint8List.fromList(buffer.toString().codeUnits));
+    }
+  }
+
+  void permitGetDialog(String reciever, String money) {
+    showDialog(
+        barrierDismissible: false,
+        context: World.context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Allow $reciever to collect \$$money ?"),
+            actions: <Widget>[
+              RaisedButton(
+                child: Text("Allow"),
+                onPressed: () {
+                  sendGetSuccessPayload(true, reciever, money);
+                  Navigator.pop(context);
+                },
+              ),
+              RaisedButton(
+                child: Text("Deny"),
+                onPressed: () {
+                  sendGetSuccessPayload(false, reciever, money);
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+  void sendGetSuccessPayload(bool allowed, String reciever, String money) {
+    User user = Provider.of<User>(World.context);
+    StringBuffer buffer = StringBuffer("get-success,");
+    buffer.write(reciever);
+    buffer.write(",");
+    buffer.write(user.nickName);
+    buffer.write(",");
+    buffer.write(money);
 
     if (user.isHost) {
       for (Player player in Provider.of<Players>(World.context).opponents) {
