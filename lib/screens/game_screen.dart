@@ -18,7 +18,7 @@ class GameScreen extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 10),
+            padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 10),
             child: GamePanel(),
           ),
           Padding(
@@ -183,7 +183,14 @@ class _GamePanelState extends State<GamePanel> {
                     });
               },
             ),
-            ...getPlayerTiles(players)
+            Container(
+              height: 35,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
+                children: getPlayerTiles(players),
+              ),
+            ),
           ],
         );
       },
@@ -195,25 +202,31 @@ List<Widget> getPlayerTiles(Players players) {
   String userNick = Provider.of<User>(World.context).nickName;
   return players.playerList.map((player) {
     if (userNick == player.nickName)
-      return RaisedButton(
-          child: Text(
-            player.nickName,
-            style: whiteTextStyle,
-          ),
-          shape: roundedBorderShape,
-          color: Colors.blue,
-          onPressed: null);
+      return Container(
+        margin: EdgeInsets.symmetric(horizontal: 5),
+        child: RaisedButton(
+            child: Text(
+              player.nickName,
+              style: whiteTextStyle,
+            ),
+            shape: roundedBorderShape,
+            color: Colors.blue,
+            onPressed: null),
+      );
 
-    return RaisedButton(
-      shape: roundedBorderShape,
-      color: Colors.blue,
-      child: Text(
-        player.nickName,
-        style: whiteTextStyle,
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 5),
+      child: RaisedButton(
+        shape: roundedBorderShape,
+        color: Colors.blue,
+        child: Text(
+          player.nickName,
+          style: whiteTextStyle,
+        ),
+        onPressed: () {
+          payDialog(player);
+        },
       ),
-      onPressed: () {
-        payDialog(player);
-      },
     );
   }).toList();
 }
