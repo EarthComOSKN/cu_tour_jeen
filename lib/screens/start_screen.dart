@@ -152,28 +152,32 @@ class _StartScreenState extends State<StartScreen> {
     });
     try {
       await Nearby().startAdvertising(
-          Provider.of<User>(World.context).nickName, Strategy.P2P_STAR,
-          onConnectionInitiated: (endpointId, connectionInfo) async {
-        try {
-          await Nearby().acceptConnection(
-            endpointId,
-            onPayLoadRecieved: payloadRecieved,
-          );
-          //will only add if successful
-          Provider.of<Players>(World.context)
-              .addPlayer(Player(connectionInfo.endpointName, endpointId));
-        } catch (exception) {
-          Scaffold.of(World.context).showSnackBar(SnackBar(
-            content: Text(exception.toString()),
-          ));
-        }
-      }, onConnectionResult: (endpointId, status) {
-        if (status != Status.CONNECTED) {
+        Provider.of<User>(World.context).nickName,
+        Strategy.P2P_STAR,
+        onConnectionInitiated: (endpointId, connectionInfo) async {
+          try {
+            await Nearby().acceptConnection(
+              endpointId,
+              onPayLoadRecieved: payloadRecieved,
+            );
+            //will only add if successful
+            Provider.of<Players>(World.context)
+                .addPlayer(Player(connectionInfo.endpointName, endpointId));
+          } catch (exception) {
+            Scaffold.of(World.context).showSnackBar(SnackBar(
+              content: Text(exception.toString()),
+            ));
+          }
+        },
+        onConnectionResult: (endpointId, status) {
+          if (status != Status.CONNECTED) {
+            Provider.of<Players>(World.context).removePlayer(endpointId);
+          }
+        },
+        onDisconnected: (endpointId) {
           Provider.of<Players>(World.context).removePlayer(endpointId);
-        }
-      }, onDisconnected: (endpointId) {
-        Provider.of<Players>(World.context).removePlayer(endpointId);
-      });
+        },
+      );
 
       Provider.of<User>(World.context).isHost = true;
       // add your own name to list of players

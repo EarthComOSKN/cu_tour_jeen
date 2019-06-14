@@ -97,8 +97,6 @@ class LobbyScreen extends StatelessWidget {
                   style: TextStyle(color: Colors.white),
                 ),
                 onPressed: () async {
-                  Provider.of<World>(context).currentScreen =
-                      ScreenState.GameScreen;
                   // send Payload for gamestart
                   StringBuffer buffer = StringBuffer("start,1500,200");
                   Provider.of<World>(context).goMoney = 200;
@@ -116,6 +114,13 @@ class LobbyScreen extends StatelessWidget {
                     await Nearby().sendPayload(player.endPointId,
                         Uint8List.fromList(buffer.toString().codeUnits));
                   }
+                  // sending twice just to ensure
+                  for (var player in Provider.of<Players>(context).opponents) {
+                    await Nearby().sendPayload(player.endPointId,
+                        Uint8List.fromList(buffer.toString().codeUnits));
+                  }
+                  Provider.of<World>(context).currentScreen =
+                      ScreenState.GameScreen;
                 },
               ),
             ),
