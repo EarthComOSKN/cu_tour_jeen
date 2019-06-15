@@ -111,14 +111,17 @@ class LobbyScreen extends StatelessWidget {
                       .gameLogs
                       .addLog(buffer.toString().split(","));
                   for (var player in Provider.of<Players>(context).opponents) {
-                    await Nearby().sendPayload(player.endPointId,
-                        Uint8List.fromList(buffer.toString().codeUnits));
+                    Nearby()
+                        .sendPayload(player.endPointId,
+                            Uint8List.fromList(buffer.toString().codeUnits))
+                        .then((_) {
+                      print("then");
+                    }).catchError((e, s) {
+                      print(e);
+                      print(s);
+                    });
                   }
-                  // sending twice just to ensure
-                  for (var player in Provider.of<Players>(context).opponents) {
-                    await Nearby().sendPayload(player.endPointId,
-                        Uint8List.fromList(buffer.toString().codeUnits));
-                  }
+
                   Provider.of<World>(context).currentScreen =
                       ScreenState.GameScreen;
                 },
