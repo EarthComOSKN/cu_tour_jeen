@@ -164,12 +164,12 @@ class _GamePanelState extends State<GamePanel> {
                               buffer.write(",");
                               buffer.write(rp.nickName);
                               if (world.user.isHost) {
-                                Nearby().sendPayload(
+                                Nearby().sendBytesPayload(
                                     rp.endPointId,
                                     Uint8List.fromList(
                                         buffer.toString().codeUnits));
                               } else {
-                                Nearby().sendPayload(
+                                Nearby().sendBytesPayload(
                                     world.hostId,
                                     Uint8List.fromList(
                                         buffer.toString().codeUnits));
@@ -263,11 +263,11 @@ void payDialog(Player reciever) {
                     //send log to self
                     world.gameLogs.addLog(buffer.toString().split(","));
                     for (Player player in world.players.opponents) {
-                      Nearby().sendPayload(player.endPointId,
+                      Nearby().sendBytesPayload(player.endPointId,
                           Uint8List.fromList(buffer.toString().codeUnits));
                     }
                   } else {
-                    Nearby().sendPayload(world.hostId,
+                    Nearby().sendBytesPayload(world.hostId,
                         Uint8List.fromList(buffer.toString().codeUnits));
                   }
 
@@ -317,10 +317,10 @@ void getDialog() {
                 buffer.write(amt.toString());
 
                 if (world.user.isHost) {
-                  Nearby().sendPayload(permitter.endPointId,
+                  Nearby().sendBytesPayload(permitter.endPointId,
                       Uint8List.fromList(buffer.toString().codeUnits));
                 } else {
-                  Nearby().sendPayload(world.hostId,
+                  Nearby().sendBytesPayload(world.hostId,
                       Uint8List.fromList(buffer.toString().codeUnits));
                 }
 

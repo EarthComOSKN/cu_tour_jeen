@@ -112,7 +112,7 @@ class LobbyScreen extends StatelessWidget {
                       .addLog(buffer.toString().split(","));
                   for (var player in Provider.of<Players>(context).opponents) {
                     Nearby()
-                        .sendPayload(player.endPointId,
+                        .sendBytesPayload(player.endPointId,
                             Uint8List.fromList(buffer.toString().codeUnits))
                         .then((_) {
                       print("then");

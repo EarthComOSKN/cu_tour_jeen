@@ -270,10 +270,10 @@ class _StartScreenState extends State<StartScreen> {
   }
 
   //called on recieving payload
-  void payloadRecieved(String endpointId, Uint8List bytes) {
+  void payloadRecieved(String endpointId, Payload pl) {
     World world = Provider.of<World>(World.context);
 
-    List<String> payload = String.fromCharCodes(bytes).split(",");
+    List<String> payload = String.fromCharCodes(pl.bytes).split(",");
     // storing game logs for use later
     world.gameLogs.addLog(payload);
 
@@ -304,7 +304,7 @@ class _StartScreenState extends State<StartScreen> {
 
         if (world.user.isHost) {
           for (Player player in world.players.opponents) {
-            Nearby().sendPayload(player.endPointId, bytes);
+            Nearby().sendBytesPayload(player.endPointId, pl.bytes);
           }
         }
 
@@ -316,11 +316,11 @@ class _StartScreenState extends State<StartScreen> {
           permitGoDialog(payload[1]);
         } else if (world.user.isHost) {
           //forward to permitter
-          Nearby().sendPayload(
+          Nearby().sendBytesPayload(
               world.players.playerList
                   .firstWhere((p) => p.nickName == payload[2])
                   .endPointId,
-              bytes);
+              pl.bytes);
         }
 
         break;
@@ -331,11 +331,11 @@ class _StartScreenState extends State<StartScreen> {
           permitGetDialog(payload[1], payload[3]);
         } else if (world.user.isHost) {
           //forward to permitter
-          Nearby().sendPayload(
+          Nearby().sendBytesPayload(
               world.players.playerList
                   .firstWhere((p) => p.nickName == payload[2])
                   .endPointId,
-              bytes);
+              pl.bytes);
         }
         break;
       case "go-success":
@@ -346,7 +346,7 @@ class _StartScreenState extends State<StartScreen> {
 
         if (world.user.isHost) {
           for (Player player in world.players.opponents) {
-            Nearby().sendPayload(player.endPointId, bytes);
+            Nearby().sendBytesPayload(player.endPointId, pl.bytes);
           }
         }
 
@@ -359,7 +359,7 @@ class _StartScreenState extends State<StartScreen> {
 
         if (world.user.isHost) {
           for (Player player in world.players.opponents) {
-            Nearby().sendPayload(player.endPointId, bytes);
+            Nearby().sendBytesPayload(player.endPointId, pl.bytes);
           }
         }
         break;
@@ -415,11 +415,11 @@ class _StartScreenState extends State<StartScreen> {
           .gameLogs
           .addLog(buffer.toString().split(","));
       for (Player player in Provider.of<Players>(World.context).opponents) {
-        Nearby().sendPayload(
+        Nearby().sendBytesPayload(
             player.endPointId, Uint8List.fromList(buffer.toString().codeUnits));
       }
     } else {
-      Nearby().sendPayload(Provider.of<World>(World.context).hostId,
+      Nearby().sendBytesPayload(Provider.of<World>(World.context).hostId,
           Uint8List.fromList(buffer.toString().codeUnits));
     }
   }
@@ -475,11 +475,11 @@ class _StartScreenState extends State<StartScreen> {
           .gameLogs
           .addLog(buffer.toString().split(","));
       for (Player player in Provider.of<Players>(World.context).opponents) {
-        Nearby().sendPayload(
+        Nearby().sendBytesPayload(
             player.endPointId, Uint8List.fromList(buffer.toString().codeUnits));
       }
     } else {
-      Nearby().sendPayload(Provider.of<World>(World.context).hostId,
+      Nearby().sendBytesPayload(Provider.of<World>(World.context).hostId,
           Uint8List.fromList(buffer.toString().codeUnits));
     }
   }
