@@ -163,6 +163,9 @@ class _StartScreenState extends State<StartScreen> {
           }
         },
         onDisconnected: (endpointId) {
+          Scaffold.of(context).showSnackBar(new SnackBar(
+            content: new Text("Sending Message"),
+          ));
           Provider.of<Players>(World.context).removePlayer(endpointId);
         },
       );
