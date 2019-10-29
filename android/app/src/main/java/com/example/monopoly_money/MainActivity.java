@@ -1,4 +1,4 @@
-package com.example.monopoly_money;
+package com.example.cu_tour_jeen;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

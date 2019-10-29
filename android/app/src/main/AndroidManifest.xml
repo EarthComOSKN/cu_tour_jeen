@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.monopoly_money">
+    package="com.example.cu_tour_jeen">
 
     <!-- io.flutter.app.FlutterApplication is an android.app.Application that
          calls FlutterMain.startInitialization(this); in its onCreate method.
@@ -16,7 +16,7 @@
 
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="monopoly_money"
+        android:label="cu_tour_jeen"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

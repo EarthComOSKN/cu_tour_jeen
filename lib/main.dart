@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:monopoly_money/providers/world.dart';
-import 'package:monopoly_money/screens/connect_screen.dart';
-import 'package:monopoly_money/screens/game_screen.dart';
-import 'package:monopoly_money/screens/lobby_screen.dart';
-import 'package:monopoly_money/screens/start_screen.dart';
+import 'package:cu_tour_jeen/providers/world.dart';
+import 'package:cu_tour_jeen/screens/connect_screen.dart';
+import 'package:cu_tour_jeen/screens/game_screen.dart';
+import 'package:cu_tour_jeen/screens/lobby_screen.dart';
+import 'package:cu_tour_jeen/screens/start_screen.dart';
 import 'package:nearby_connections/nearby_connections.dart';
 import 'package:provider/provider.dart';
 

@@ -1,11 +1,11 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:monopoly_money/components/player_tile.dart';
-import 'package:monopoly_money/providers/players.dart';
-import 'package:monopoly_money/providers/user.dart';
-import 'package:monopoly_money/providers/world.dart';
-import 'package:monopoly_money/theme/style.dart';
+import 'package:cu_tour_jeen/components/player_tile.dart';
+import 'package:cu_tour_jeen/providers/players.dart';
+import 'package:cu_tour_jeen/providers/user.dart';
+import 'package:cu_tour_jeen/providers/world.dart';
+import 'package:cu_tour_jeen/theme/style.dart';
 import 'package:nearby_connections/nearby_connections.dart';
 import 'package:provider/provider.dart';
 
@@ -61,73 +61,6 @@ class LobbyScreen extends StatelessWidget {
               ),
             ],
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Text(
-                "Starting Balance:",
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w300),
-              ),
-              Text(
-                "1500\$",
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w300),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Text(
-                "Go Money:",
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w300),
-              ),
-              Text(
-                "200\$",
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w300),
-              ),
-            ],
-          ),
-          if (hostScreen)
-            Center(
-              child: RaisedButton(
-                shape: roundedBorderShape,
-                color: Colors.blue,
-                child: Text(
-                  "Start",
-                  style: TextStyle(color: Colors.white),
-                ),
-                onPressed: () async {
-                  // send Payload for gamestart
-                  StringBuffer buffer = StringBuffer("start,1500,200");
-                  Provider.of<World>(context).goMoney = 200;
-                  Provider.of<User>(context).money = 1500;
-
-                  for (var player in Provider.of<Players>(context).playerList) {
-                    buffer.write(",");
-                    buffer.write(player.nickName);
-                  }
-                  //send log to self
-                  Provider.of<World>(context)
-                      .gameLogs
-                      .addLog(buffer.toString().split(","));
-                  for (var player in Provider.of<Players>(context).opponents) {
-                    Nearby()
-                        .sendBytesPayload(player.endPointId,
-                            Uint8List.fromList(buffer.toString().codeUnits))
-                        .then((_) {
-                      print("then");
-                    }).catchError((e, s) {
-                      print(e);
-                      print(s);
-                    });
-                  }
-
-                  Provider.of<World>(context).currentScreen =
-                      ScreenState.GameScreen;
-                },
-              ),
-            ),
-          Divider(),
           Text(
             " Lobby",
             style: TextStyle(fontSize: 30, fontWeight: FontWeight.w200),

@@ -2,9 +2,9 @@ import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:monopoly_money/providers/game_logs.dart';
-import 'package:monopoly_money/providers/players.dart';
-import 'package:monopoly_money/providers/user.dart';
+import 'package:cu_tour_jeen/providers/game_logs.dart';
+import 'package:cu_tour_jeen/providers/players.dart';
+import 'package:cu_tour_jeen/providers/user.dart';
 
 enum ScreenState { StartScreen, ConnectScreen, LobbyScreen, GameScreen }
 

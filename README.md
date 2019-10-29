@@ -1,4 +1,4 @@
-# monopoly_money
+# CU_TOUR_JEEN
 
-A **Flutter** Game to handle monoply money transactions offline via wireless connections using the [**Nearby Connections API**](https://pub.dev/packages/nearby_connections).
+A **Flutter** Offline Application for Wireless class.
 
