@@ -21,7 +21,7 @@ class World with ChangeNotifier {
   final GameLogs gameLogs;
   //init values upon creating the world
   World()
-      : user = User("User" + Random().nextInt(100).toString()),
+      : user = User("Pang" + Random().nextInt(100).toString()),
         gameLogs = GameLogs(),
         players = Players() {
     _currentScreen = ScreenState.StartScreen;

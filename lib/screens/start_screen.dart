@@ -37,22 +37,10 @@ class _StartScreenState extends State<StartScreen> {
               text: TextSpan(
                 children: <TextSpan>[
                   TextSpan(
-                      text: "\$\$ ",
-                      style: TextStyle(
-                          fontSize: 25,
-                          color: Colors.blue,
-                          fontWeight: FontWeight.w900)),
-                  TextSpan(
                       text: "CU TOUR JEEN",
                       style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 50,
                           color: Colors.black,
-                          fontWeight: FontWeight.w900)),
-                  TextSpan(
-                      text: " \$\$",
-                      style: TextStyle(
-                          fontSize: 25,
-                          color: Colors.blue,
                           fontWeight: FontWeight.w900)),
                 ],
               ),

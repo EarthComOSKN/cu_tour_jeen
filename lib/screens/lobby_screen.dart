@@ -76,7 +76,20 @@ class LobbyScreen extends StatelessWidget {
                 );
               },
             ),
-          )
+          ),
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+            RaisedButton(
+                color: Colors.blue,
+                padding: EdgeInsets.all(8),
+                child: Text(
+                  "Let Tour",
+                  style: TextStyle(
+                      fontSize: 40,
+                      fontWeight: FontWeight.w300,
+                      color: Colors.white),
+                ),
+                onPressed: () => {}),
+          ])
         ],
       ),
     );
