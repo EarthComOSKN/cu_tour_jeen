@@ -1,8 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
-import 'package:monopoly_money/providers/user.dart';
-import 'package:monopoly_money/providers/world.dart';
+import 'package:cu_tour_jeen/providers/user.dart';
+import 'package:cu_tour_jeen/providers/world.dart';
 import 'package:provider/provider.dart';
 
 class Players with ChangeNotifier {

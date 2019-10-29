@@ -2,12 +2,12 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:monopoly_money/components/log_tile.dart';
-import 'package:monopoly_money/providers/game_logs.dart';
-import 'package:monopoly_money/providers/players.dart';
-import 'package:monopoly_money/providers/user.dart';
-import 'package:monopoly_money/providers/world.dart';
-import 'package:monopoly_money/theme/style.dart';
+import 'package:cu_tour_jeen/components/log_tile.dart';
+import 'package:cu_tour_jeen/providers/game_logs.dart';
+import 'package:cu_tour_jeen/providers/players.dart';
+import 'package:cu_tour_jeen/providers/user.dart';
+import 'package:cu_tour_jeen/providers/world.dart';
+import 'package:cu_tour_jeen/theme/style.dart';
 import 'package:nearby_connections/nearby_connections.dart';
 import 'package:provider/provider.dart';
 

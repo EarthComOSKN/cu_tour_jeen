@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:monopoly_money/theme/style.dart';
+import 'package:cu_tour_jeen/theme/style.dart';
 
 class LogTile extends StatelessWidget {
   final List<String> payload;
