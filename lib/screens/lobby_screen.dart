@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:cu_tour_jeen/main.dart';
 import 'package:flutter/material.dart';
 import 'package:cu_tour_jeen/components/player_tile.dart';
 import 'package:cu_tour_jeen/providers/players.dart';
@@ -8,6 +9,7 @@ import 'package:cu_tour_jeen/providers/world.dart';
 import 'package:cu_tour_jeen/theme/style.dart';
 import 'package:nearby_connections/nearby_connections.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class LobbyScreen extends StatelessWidget {
   final bool hostScreen;
@@ -85,7 +87,7 @@ class LobbyScreen extends StatelessWidget {
                 color: Colors.blue,
                 padding: EdgeInsets.all(8),
                 child: Text(
-                  "Let Tour",
+                  "Super Button",
                   style: TextStyle(
                       fontSize: 40,
                       fontWeight: FontWeight.w300,
@@ -98,7 +100,7 @@ class LobbyScreen extends StatelessWidget {
                       StringBuffer("message from ลูกทัวจ้าาาา");
                   buffer.write(world.user.nickName);
                   buffer.write(",");
-
+                  sendNotification()
                   Nearby().sendBytesPayload(world.hostId,
                       Uint8List.fromList(buffer.toString().codeUnits));
 
@@ -111,4 +113,18 @@ class LobbyScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+sendNotification() async {
+  var androidPlatformChannelSpecifics = AndroidNotificationDetails('10000',
+      'FLUTTER_NOTIFICATION_CHANNEL', 'FLUTTER_NOTIFICATION_CHANNEL_DETAIL',
+      importance: Importance.Max, priority: Priority.High);
+  var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+
+  var platformChannelSpecifics = NotificationDetails(
+      androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+
+  await flutterLocalNotificationsPlugin.show(111, 'Hello, benznest.',
+      'This is a your notifications. ', platformChannelSpecifics,
+      payload: 'I just haven\'t Met You Yet');
 }
