@@ -9,7 +9,6 @@ import 'package:cu_tour_jeen/providers/world.dart';
 import 'package:cu_tour_jeen/theme/style.dart';
 import 'package:nearby_connections/nearby_connections.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class LobbyScreen extends StatelessWidget {
   final bool hostScreen;
@@ -96,17 +95,11 @@ class LobbyScreen extends StatelessWidget {
                 onPressed: () {
                   print("test");
                   World world = Provider.of<World>(context);
-                  StringBuffer buffer =
-                      StringBuffer("message from ลูกทัวจ้าาาา");
+                  StringBuffer buffer = StringBuffer("message from ");
                   buffer.write(world.user.nickName);
-                  buffer.write(",");
-                  sendNotification()
+                  // sendNotification();
                   Nearby().sendBytesPayload(world.hostId,
                       Uint8List.fromList(buffer.toString().codeUnits));
-
-                  Scaffold.of(context).showSnackBar(new SnackBar(
-                    content: new Text("Sending Message"),
-                  ));
                 }),
           ])
         ],
@@ -115,16 +108,16 @@ class LobbyScreen extends StatelessWidget {
   }
 }
 
-sendNotification() async {
-  var androidPlatformChannelSpecifics = AndroidNotificationDetails('10000',
-      'FLUTTER_NOTIFICATION_CHANNEL', 'FLUTTER_NOTIFICATION_CHANNEL_DETAIL',
-      importance: Importance.Max, priority: Priority.High);
-  var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+// sendNotification() async {
+//   var androidPlatformChannelSpecifics = AndroidNotificationDetails('10000',
+//       'FLUTTER_NOTIFICATION_CHANNEL', 'FLUTTER_NOTIFICATION_CHANNEL_DETAIL',
+//       importance: Importance.Max, priority: Priority.High);
+//   var iOSPlatformChannelSpecifics = IOSNotificationDetails();
 
-  var platformChannelSpecifics = NotificationDetails(
-      androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+//   var platformChannelSpecifics = NotificationDetails(
+//       androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 
-  await flutterLocalNotificationsPlugin.show(111, 'Hello, benznest.',
-      'This is a your notifications. ', platformChannelSpecifics,
-      payload: 'I just haven\'t Met You Yet');
-}
+//   await flutterLocalNotificationsPlugin.show(111, 'Hello, benznest.',
+//       'This is a your notifications. ', platformChannelSpecifics,
+//       payload: 'I just haven\'t Met You Yet');
+// }

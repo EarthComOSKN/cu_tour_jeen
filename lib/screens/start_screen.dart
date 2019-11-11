@@ -264,6 +264,7 @@ class _StartScreenState extends State<StartScreen> {
   //called on recieving payload
   void payloadRecieved(String endpointId, Payload pl) {
     World world = Provider.of<World>(World.context);
+    User user = Provider.of<User>(World.context);
 
     List<String> payload = String.fromCharCodes(pl.bytes).split(",");
     // storing game logs for use later
@@ -273,6 +274,16 @@ class _StartScreenState extends State<StartScreen> {
     Scaffold.of(World.context).showSnackBar(SnackBar(
       content: Text(String.fromCharCodes(pl.bytes)),
     ));
+    if (user.isHost) {
+      print("i'm Host $user");
+      List<Player> players = Provider.of<Players>(World.context).opponents;
+      // print(players.toString());
+      for (Player player in Provider.of<Players>(World.context).opponents) {
+        print(player.nickName);
+        //   Nearby().sendBytesPayload(player.endPointId,
+        //       Uint8List.fromList(String.fromCharCodes(pl.bytes).codeUnits));
+      }
+    }
   }
 
   void permitGoDialog(String reciever) {
