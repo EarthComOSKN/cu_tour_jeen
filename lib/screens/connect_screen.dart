@@ -15,7 +15,7 @@ class ConnectScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              "Looking for a Game Host",
+              "Looking for a Host",
               style: TextStyle(fontSize: 25),
             ),
           ),

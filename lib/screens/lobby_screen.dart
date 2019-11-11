@@ -61,9 +61,12 @@ class LobbyScreen extends StatelessWidget {
               ),
             ],
           ),
-          Text(
-            " Lobby",
-            style: TextStyle(fontSize: 30, fontWeight: FontWeight.w200),
+          Padding(
+            padding: EdgeInsets.fromLTRB(8.0, 0, 0, 0),
+            child: Text(
+              "Tour",
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.w200),
+            ),
           ),
           Expanded(
             child: Consumer<Players>(
@@ -88,7 +91,21 @@ class LobbyScreen extends StatelessWidget {
                       fontWeight: FontWeight.w300,
                       color: Colors.white),
                 ),
-                onPressed: () => {}),
+                onPressed: () {
+                  print("test");
+                  World world = Provider.of<World>(context);
+                  StringBuffer buffer =
+                      StringBuffer("message from ลูกทัวจ้าาาา");
+                  buffer.write(world.user.nickName);
+                  buffer.write(",");
+
+                  Nearby().sendBytesPayload(world.hostId,
+                      Uint8List.fromList(buffer.toString().codeUnits));
+
+                  Scaffold.of(context).showSnackBar(new SnackBar(
+                    content: new Text("Sending Message"),
+                  ));
+                }),
           ])
         ],
       ),

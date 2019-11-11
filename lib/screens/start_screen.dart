@@ -163,10 +163,10 @@ class _StartScreenState extends State<StartScreen> {
           }
         },
         onDisconnected: (endpointId) {
-          Scaffold.of(context).showSnackBar(new SnackBar(
-            content: new Text("Sending Message"),
-          ));
           Provider.of<Players>(World.context).removePlayer(endpointId);
+          Scaffold.of(World.context).showSnackBar(new SnackBar(
+            content: new Text(endpointId + " Lost Connection"),
+          ));
         },
       );
 
@@ -227,6 +227,7 @@ class _StartScreenState extends State<StartScreen> {
                 Nearby().stopDiscovery();
               }
             }, onDisconnected: (endpointId) {
+              print("test 2");
               Provider.of<Players>(World.context).removePlayer(endpointId);
             });
           } catch (exception) {
@@ -269,6 +270,9 @@ class _StartScreenState extends State<StartScreen> {
     world.gameLogs.addLog(payload);
 
     print(payload[0]);
+    Scaffold.of(World.context).showSnackBar(SnackBar(
+      content: Text(String.fromCharCodes(pl.bytes)),
+    ));
     switch (payload[0]) {
       case "start":
         // method, starting-money, go-money, p1, p2, p3...
