@@ -36,7 +36,7 @@ class LobbyScreen extends StatelessWidget {
                       builder: (context) {
                         return AlertDialog(
                           shape: roundedBorderShape,
-                          title: Text("Leave Game Lobby?"),
+                          title: Text("Leave Tour?"),
                           actions: <Widget>[
                             RaisedButton(
                               shape: roundedBorderShape,

@@ -163,9 +163,11 @@ class _StartScreenState extends State<StartScreen> {
           }
         },
         onDisconnected: (endpointId) {
+          Player removePlayer =
+              Provider.of<Players>(World.context).findPlayer(endpointId);
           Provider.of<Players>(World.context).removePlayer(endpointId);
           Scaffold.of(World.context).showSnackBar(new SnackBar(
-            content: new Text(endpointId + " Lost Connection"),
+            content: new Text(removePlayer.nickName + " Lost Connection"),
           ));
         },
       );
@@ -276,12 +278,11 @@ class _StartScreenState extends State<StartScreen> {
     ));
     if (user.isHost) {
       print("i'm Host $user");
-      List<Player> players = Provider.of<Players>(World.context).opponents;
       // print(players.toString());
       for (Player player in Provider.of<Players>(World.context).opponents) {
         print(player.nickName);
-        //   Nearby().sendBytesPayload(player.endPointId,
-        //       Uint8List.fromList(String.fromCharCodes(pl.bytes).codeUnits));
+        Nearby().sendBytesPayload(player.endPointId,
+            Uint8List.fromList(String.fromCharCodes(pl.bytes).codeUnits));
       }
     }
   }
