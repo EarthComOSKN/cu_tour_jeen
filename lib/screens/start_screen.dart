@@ -165,7 +165,14 @@ class _StartScreenState extends State<StartScreen> {
         onDisconnected: (endpointId) {
           Player removePlayer =
               Provider.of<Players>(World.context).findPlayer(endpointId);
+          String name = removePlayer.nickName;
           Provider.of<Players>(World.context).removePlayer(endpointId);
+          StringBuffer buffer = StringBuffer("$name has Lost");
+          for (Player player in Provider.of<Players>(World.context).opponents) {
+            print(player.nickName);
+            Nearby().sendBytesPayload(player.endPointId,
+                Uint8List.fromList(buffer.toString().codeUnits));
+          }
           Scaffold.of(World.context).showSnackBar(new SnackBar(
             content: new Text(removePlayer.nickName + " Lost Connection"),
           ));
