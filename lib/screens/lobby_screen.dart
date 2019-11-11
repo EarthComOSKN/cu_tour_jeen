@@ -93,13 +93,15 @@ class LobbyScreen extends StatelessWidget {
                       color: Colors.white),
                 ),
                 onPressed: () {
-                  print("test");
-                  World world = Provider.of<World>(context);
-                  StringBuffer buffer = StringBuffer("message from ");
-                  buffer.write(world.user.nickName);
-                  // sendNotification();
-                  Nearby().sendBytesPayload(world.hostId,
-                      Uint8List.fromList(buffer.toString().codeUnits));
+                  // print("test");
+                  // World world = Provider.of<World>(context);
+                  // StringBuffer buffer = StringBuffer("message from ");
+                  // buffer.write(world.user.nickName);
+                  // // sendNotification();
+                  // Nearby().sendBytesPayload(world.hostId,
+                  //     Uint8List.fromList(buffer.toString().codeUnits));
+                  Provider.of<World>(World.context).currentScreen =
+                      ScreenState.ChatScreen;
                 }),
           ])
         ],

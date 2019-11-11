@@ -1,3 +1,4 @@
+import 'package:cu_tour_jeen/screens/chat_room.dart';
 import 'package:flutter/material.dart';
 import 'package:cu_tour_jeen/providers/world.dart';
 import 'package:cu_tour_jeen/screens/connect_screen.dart';
@@ -96,6 +97,8 @@ class _MyHomePageState extends State<MyHomePage> {
               return ConnectScreen();
             case ScreenState.LobbyScreen:
               return LobbyScreen(world.user.isHost);
+            case ScreenState.ChatScreen:
+              return ChatScreen();
           }
         },
       ),
