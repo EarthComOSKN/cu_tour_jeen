@@ -3,13 +3,8 @@ import 'package:cu_tour_jeen/providers/world.dart';
 import 'package:cu_tour_jeen/screens/connect_screen.dart';
 import 'package:cu_tour_jeen/screens/lobby_screen.dart';
 import 'package:cu_tour_jeen/screens/start_screen.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:nearby_connections/nearby_connections.dart';
 import 'package:provider/provider.dart';
-import 'dart:io';
-
-FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
 
 void main() => runApp(MyApp());
 
@@ -27,26 +22,26 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    message = "No message.";
+    // message = "No message.";
 
-    var initializationSettingsAndroid =
-        AndroidInitializationSettings('ic_launcher');
+    // var initializationSettingsAndroid =
+    //     AndroidInitializationSettings('ic_launcher');
 
-    var initializationSettingsIOS = IOSInitializationSettings(
-        onDidReceiveLocalNotification: (id, title, body, payload) {
-      print("onDidReceiveLocalNotification called.");
-    });
-    var initializationSettings = InitializationSettings(
-        initializationSettingsAndroid, initializationSettingsIOS);
+    // var initializationSettingsIOS = IOSInitializationSettings(
+    //     onDidReceiveLocalNotification: (id, title, body, payload) {
+    //   print("onDidReceiveLocalNotification called.");
+    // });
+    // var initializationSettings = InitializationSettings(
+    //     initializationSettingsAndroid, initializationSettingsIOS);
 
-    flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: (payload) {
-      // when user tap on notification.
-      print("onSelectNotification called.");
-      setState(() {
-        message = payload;
-      });
-    });
+    // flutterLocalNotificationsPlugin.initialize(initializationSettings,
+    //     onSelectNotification: (payload) {
+    //   // when user tap on notification.
+    //   print("onSelectNotification called.");
+    //   setState(() {
+    //     message = payload;
+    //   });
+    // });
     super.initState();
     Nearby().askLocationPermission();
   }
