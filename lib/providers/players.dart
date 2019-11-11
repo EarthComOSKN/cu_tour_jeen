@@ -27,8 +27,9 @@ class Players with ChangeNotifier {
     return _opponents;
   }
 
-  Player findPlayer(String playerId){
-    int index = _playerList.indexWhere((player) => playerId == player.endPointId)
+  Player findPlayer(String playerId) {
+    int index =
+        _playerList.indexWhere((player) => playerId == player.endPointId);
     return _playerList[index];
   }
 
