@@ -100,20 +100,7 @@ class LobbyScreen extends StatelessWidget {
                   // // sendNotification();
                   // Nearby().sendBytesPayload(world.hostId,
                   //     Uint8List.fromList(buffer.toString().codeUnits));
-                  Provider.of<Players>(World.context)
-                      .addPlayer(Player('Toei', 'sadfasdfasdfsdaf'));
-                  Provider.of<Players>(World.context)
-                      .addPlayer(Player('Earth', 'sadfasdfasdfsdaf'));
-                  Provider.of<Players>(World.context)
-                      .addPlayer(Player('Patja', 'sadfasdfasdfsdaf'));
-                  Provider.of<Players>(World.context)
-                      .addPlayer(Player('Gem', 'sadfasdfasdfsdaf'));
-                  Provider.of<Players>(World.context)
-                      .addPlayer(Player('Beam', 'sadfasdfasdfsdaf'));
-                  Provider.of<Players>(World.context)
-                      .addPlayer(Player('Eye', 'sadfasdfasdfsdaf'));
-                  Provider.of<Players>(World.context)
-                      .addPlayer(Player('Jade', 'sadfasdfasdfsdaf'));
+
                   // Provider.of<World>(World.context).currentScreen =
                   //     ScreenState.ChatScreen;
                 }),

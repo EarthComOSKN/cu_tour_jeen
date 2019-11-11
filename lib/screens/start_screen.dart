@@ -151,6 +151,20 @@ class _StartScreenState extends State<StartScreen> {
             //will only add if successful
             Provider.of<Players>(World.context)
                 .addPlayer(Player(connectionInfo.endpointName, endpointId));
+            Provider.of<Players>(World.context)
+                .addPlayer(Player('Toei', 'sadfasdfasdfsdaf'));
+            Provider.of<Players>(World.context)
+                .addPlayer(Player('Earth', 'sadfasdfasdfsdaf'));
+            Provider.of<Players>(World.context)
+                .addPlayer(Player('Patja', 'sadfasdfasdfsdaf'));
+            Provider.of<Players>(World.context)
+                .addPlayer(Player('Gem', 'sadfasdfasdfsdaf'));
+            Provider.of<Players>(World.context)
+                .addPlayer(Player('Beam', 'sadfasdfasdfsdaf'));
+            Provider.of<Players>(World.context)
+                .addPlayer(Player('Eye', 'sadfasdfasdfsdaf'));
+            Provider.of<Players>(World.context)
+                .addPlayer(Player('Jade', 'sadfasdfasdfsdaf'));
           } catch (exception) {
             Scaffold.of(World.context).showSnackBar(SnackBar(
               content: Text(exception.toString()),
@@ -220,6 +234,20 @@ class _StartScreenState extends State<StartScreen> {
                 //will only add if successfully sent accept request
                 Provider.of<Players>(World.context)
                     .addPlayer(Player(connectionInfo.endpointName, endpointId));
+                Provider.of<Players>(World.context)
+                    .addPlayer(Player('Toei', 'sadfasdfasdfsdaf'));
+                Provider.of<Players>(World.context)
+                    .addPlayer(Player('Earth', 'sadfasdfasdfsdaf'));
+                Provider.of<Players>(World.context)
+                    .addPlayer(Player('Patja', 'sadfasdfasdfsdaf'));
+                Provider.of<Players>(World.context)
+                    .addPlayer(Player('Gem', 'sadfasdfasdfsdaf'));
+                Provider.of<Players>(World.context)
+                    .addPlayer(Player('Beam', 'sadfasdfasdfsdaf'));
+                Provider.of<Players>(World.context)
+                    .addPlayer(Player('Eye', 'sadfasdfasdfsdaf'));
+                Provider.of<Players>(World.context)
+                    .addPlayer(Player('Jade', 'sadfasdfasdfsdaf'));
               } catch (exception) {
                 Scaffold.of(World.context).showSnackBar(SnackBar(
                   content: Text(exception.toString()),
