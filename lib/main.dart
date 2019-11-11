@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cu_tour_jeen/providers/world.dart';
 import 'package:cu_tour_jeen/screens/connect_screen.dart';
-import 'package:cu_tour_jeen/screens/game_screen.dart';
 import 'package:cu_tour_jeen/screens/lobby_screen.dart';
 import 'package:cu_tour_jeen/screens/start_screen.dart';
 import 'package:nearby_connections/nearby_connections.dart';
@@ -73,8 +72,6 @@ class _MyHomePageState extends State<MyHomePage> {
               return ConnectScreen();
             case ScreenState.LobbyScreen:
               return LobbyScreen(world.user.isHost);
-            case ScreenState.GameScreen:
-              return GameScreen();
           }
         },
       ),

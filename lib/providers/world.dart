@@ -6,7 +6,7 @@ import 'package:cu_tour_jeen/providers/game_logs.dart';
 import 'package:cu_tour_jeen/providers/players.dart';
 import 'package:cu_tour_jeen/providers/user.dart';
 
-enum ScreenState { StartScreen, ConnectScreen, LobbyScreen, GameScreen }
+enum ScreenState { StartScreen, ConnectScreen, LobbyScreen }
 
 class World with ChangeNotifier {
   static BuildContext context;
