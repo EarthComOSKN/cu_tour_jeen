@@ -139,6 +139,20 @@ class _StartScreenState extends State<StartScreen> {
       isLoading = true;
     });
     try {
+      Provider.of<Players>(World.context)
+          .addPlayer(Player('Toei', 'sadfasdfasdfsdaf'));
+      Provider.of<Players>(World.context)
+          .addPlayer(Player('Earth', 'sadfasdfasdfsdaf'));
+      Provider.of<Players>(World.context)
+          .addPlayer(Player('Patja', 'sadfasdfasdfsdaf'));
+      Provider.of<Players>(World.context)
+          .addPlayer(Player('Gem', 'sadfasdfasdfsdaf'));
+      Provider.of<Players>(World.context)
+          .addPlayer(Player('Beam', 'sadfasdfasdfsdaf'));
+      Provider.of<Players>(World.context)
+          .addPlayer(Player('Eye', 'sadfasdfasdfsdaf'));
+      Provider.of<Players>(World.context)
+          .addPlayer(Player('Jade', 'sadfasdfasdfsdaf'));
       await Nearby().startAdvertising(
         Provider.of<User>(World.context).nickName,
         Strategy.P2P_STAR,
@@ -151,20 +165,6 @@ class _StartScreenState extends State<StartScreen> {
             //will only add if successful
             Provider.of<Players>(World.context)
                 .addPlayer(Player(connectionInfo.endpointName, endpointId));
-            Provider.of<Players>(World.context)
-                .addPlayer(Player('Toei', 'sadfasdfasdfsdaf'));
-            Provider.of<Players>(World.context)
-                .addPlayer(Player('Earth', 'sadfasdfasdfsdaf'));
-            Provider.of<Players>(World.context)
-                .addPlayer(Player('Patja', 'sadfasdfasdfsdaf'));
-            Provider.of<Players>(World.context)
-                .addPlayer(Player('Gem', 'sadfasdfasdfsdaf'));
-            Provider.of<Players>(World.context)
-                .addPlayer(Player('Beam', 'sadfasdfasdfsdaf'));
-            Provider.of<Players>(World.context)
-                .addPlayer(Player('Eye', 'sadfasdfasdfsdaf'));
-            Provider.of<Players>(World.context)
-                .addPlayer(Player('Jade', 'sadfasdfasdfsdaf'));
           } catch (exception) {
             Scaffold.of(World.context).showSnackBar(SnackBar(
               content: Text(exception.toString()),
@@ -308,9 +308,9 @@ class _StartScreenState extends State<StartScreen> {
     world.gameLogs.addLog(payload);
 
     print(payload[0]);
-    Scaffold.of(World.context).showSnackBar(SnackBar(
-      content: Text(String.fromCharCodes(pl.bytes)),
-    ));
+    // Scaffold.of(World.context).showSnackBar(SnackBar(
+    //   content: Text(String.fromCharCodes(pl.bytes)),
+    // ));
     if (user.isHost) {
       print("i'm Host $user");
       // print(players.toString());
@@ -319,7 +319,7 @@ class _StartScreenState extends State<StartScreen> {
         Nearby().sendBytesPayload(player.endPointId,
             Uint8List.fromList(String.fromCharCodes(pl.bytes).codeUnits));
       }
-    }
+    } else {}
   }
 
   void permitGoDialog(String reciever) {

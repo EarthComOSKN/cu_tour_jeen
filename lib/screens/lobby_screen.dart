@@ -101,8 +101,8 @@ class LobbyScreen extends StatelessWidget {
                   // Nearby().sendBytesPayload(world.hostId,
                   //     Uint8List.fromList(buffer.toString().codeUnits));
 
-                  // Provider.of<World>(World.context).currentScreen =
-                  //     ScreenState.ChatScreen;
+                  Provider.of<World>(World.context).currentScreen =
+                      ScreenState.ChatScreen;
                 }),
           ])
         ],
